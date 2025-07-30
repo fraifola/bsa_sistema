@@ -1,0 +1,21 @@
+CREATE TABLE contas_pagar (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  data_emissao DATE,
+  tipo VARCHAR(100),
+  conta_corrente VARCHAR(100),
+  documento_nf VARCHAR(100),
+  fornecedor VARCHAR(100),
+  funcionario VARCHAR(100),
+  data_vencimento DATE,
+  subtotal DECIMAL(10,2),
+  plano_contas VARCHAR(100),
+  subcategoria VARCHAR(100),
+  forma_pagto VARCHAR(50),
+  situacao_atual VARCHAR(50),
+  repeticao_mensal VARCHAR(10),
+  descricao_complementar TEXT,
+  juros_multa DECIMAL(10,2),
+  desconto DECIMAL(10,2),
+  data_liquidacao DATE,
+  total_pago DECIMAL(10,2)
+);

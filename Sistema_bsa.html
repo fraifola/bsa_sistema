@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BSA - Propostas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #7fc241;
+        }
+        .navbar-brand, .nav-link, .navbar-text {
+            color: white !important;
+        }
+        .table thead th {
+            background-color: #e9ecef;
+        }
+        .btn-primary {
+            background-color: #7fc241;
+            border: none;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        /* 🌈 Cores personalizadas para o Financeiro */
+        .financeiro-header {
+            background-color: #54ab6f; /* verde-claro */
+            color: white;
+        }
+        /* Corrigido o seletor para o campo de seleção, era 'financeiro-select-verde' no CSS e 'financeiro-select' no HTML */
+        .financeiro-select, .financeiro-select-verde {
+            background-color: #ffffff !important; /* Certifique-se que essa cor é intencional, parece azul */
+            color: rgb(0, 0, 0) !important;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+        }
+        .financeiro-input {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+    /* ... (seu CSS existente) ... */
+
+    /* Estilos para a tabela de Contas Registradas */
+    #listar-pagamentos-secao .table thead th {
+        background-color: #e9ecef;
+        /* Alinhamento padrão para os cabeçalhos */
+        text-align: left; /* Ou center se preferir para todos os cabeçalhos */
+    }
+
+    #listar-pagamentos-secao .table tbody td {
+        /* Alinhamento padrão para as células de dados */
+        text-align: left;
+        padding: 8px 12px;    /* Dá um respiro entre os textos */
+        max-width: 190px;
+}   
+    /* Alinhamento à direita para colunas específicas (valores numéricos) */
+    /* Usamos nth-child para selecionar as colunas pelo índice */
+    #listar-pagamentos-secao .table th:nth-child(4), /* Cabeçalho 'Valor' */
+    #listar-pagamentos-secao .table td:nth-child(4), /* Célula 'Valor' */
+    #listar-pagamentos-secao .table th:nth-child(10), /* Cabeçalho 'Juros/Multa' */
+    #listar-pagamentos-secao .table td:nth-child(10), /* Célula 'Juros/Multa' */
+    #listar-pagamentos-secao .table th:nth-child(11), /* Cabeçalho 'Desconto' */
+    #listar-pagamentos-secao .table td:nth-child(11), /* Célula 'Desconto' */
+    #listar-pagamentos-secao .table th:nth-child(13), /* Cabeçalho 'Total Pago' */
+    #listar-pagamentos-secao .table td:nth-child(13) { /* Célula 'Total Pago' */
+        text-align: right;
+    }
+
+    /* Alinhamento centralizado para algumas colunas (datas e status, se desejar) */
+    #listar-pagamentos-secao .table th:nth-child(3), /* Data Venc. */
+    #listar-pagamentos-secao .table td:nth-child(3),
+    #listar-pagamentos-secao .table th:nth-child(5), /* Status */
+    #listar-pagamentos-secao .table td:nth-child(5),
+    #listar-pagamentos-secao .table th:nth-child(12), /* Data Liquid. */
+    #listar-pagamentos-secao .table td:nth-child(12) {
+        text-align: center;
+    }
+
+    /* Para a mensagem "Nenhum pagamento registrado." */
+    #lista-contas-tbody td[colspan="13"] {
+        text-align: center;
+    }
+
+    /* ... (resto do seu CSS) ... */
+    /* Melhor legibilidade e espaçamento da tabela de Contas Registradas */
+    #listar-pagamentos-secao .table th,
+    #listar-pagamentos-secao .table td {
+        padding: 10px 12px;
+        font-size: 11px;
+        vertical-align: middle;
+    }
+
+    /* Permite quebra apenas controlada em colunas longas */
+    #listar-pagamentos-secao .table td:nth-child(7),  /* Conta Corrente */
+    #listar-pagamentos-secao .table td:nth-child(8) { /* Plano de Contas */
+        white-space: normal;       /* permite quebra controlada */
+        word-break: break-word;    /* quebra palavras longas */
+        max-width: 190px;          /* limita largura para evitar desconfiguração */
+    }
+    /* Permite quebra de linha para Fornecedor e Tipo */
+    #listar-pagamentos-secao .table td:nth-child(1),  /* Fornecedor */
+    #listar-pagamentos-secao .table td:nth-child(6) {  /* Tipo */
+        white-space: normal;     /* Permite que o texto quebre a linha */
+        word-break: break-word;  /* Quebra palavras longas se necessário */
+    }
+    .descricao-expandida-row td { /* Use a classe que definimos anteriormente */
+        background-color: #f1f1f1;
+        font-style: italic;
+        padding: 10px;
+    }
+
+    /* Alternância de cor em linhas */
+    #listar-pagamentos-secao .table tbody tr:nth-child(odd) {
+        background-color: #f4f4f4;
+    }
+.descricao-row td {
+    background-color: #f1f1f1;
+    font-style: italic;
+    padding: 10px;
+}
+.clickable-row {
+    cursor: pointer;
+}   
+.linha-pagamento {
+    cursor: pointer;
+}
+
+.descricao-extra td {
+    font-style: italic;
+    padding: 8px 12px;
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">BSA</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item mx-2"><a class="nav-link" href="#">Operacional</a></li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">CRM</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Listar</a></li>
+                            <li><a class="dropdown-item" href="#">Nova</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Clientes</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#clientes">Listar</a></li>
+                            <li><a class="dropdown-item" href="#cadastro-cliente">Novo</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Lavagem de Tanque</a></li>
+                            <li><a class="dropdown-item" href="#">Controle de Praga</a></li>
+                            <li><a class="dropdown-item" href="#">Fumigação</a></li>
+                            <li><a class="dropdown-item" href="#">Estoque</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Financeiro</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
+                            <li><a class="dropdown-item" href="#">Contas</a></li>
+                            <li><a class="dropdown-item" href="#">Listar Pagamentos</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Relatórios</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Consultar OS</a></li>
+                            <li><a class="dropdown-item" href="#">OS por tipo de Pagamento</a></li>
+                            <li><a class="dropdown-item" href="#">Estatística</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Impressões</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Consultar OS</a></li>
+                            <li><a class="dropdown-item" href="#">OS por tipo de Pagamento</a></li>
+                            <li><a class="dropdown-item" href="#">Estatística</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Arquivos</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Consultar OS</a></li>
+                            <li><a class="dropdown-item" href="#">OS por tipo de Pagamento</a></li>
+                            <li><a class="dropdown-item" href="#">Estatística</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <hr>
+
+    <div class="container mt-4" id="listar-pagamentos-secao" style="display: none;">
+        <h4 class="mt-5">Contas Registradas</h4>
+        <table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Fornecedor</th>
+            <th>Documento</th>
+            <th>Data Venc.</th>
+            <th>Valor</th>
+            <th>Status</th>
+            <th>Tipo</th>
+            <th>Conta Corrente</th>
+            <th>Plano de Contas</th>   
+            <th>Repetição mensal</th>
+            <th>Forma Pagamento</th>
+            <th>Juros/Multa</th>
+            <th>Desconto</th>
+            <th>Data Liquid.</th>
+            <th>Total Pago</th>
+        </tr>
+    </thead>
+    <tbody id="lista-contas-tbody">
+    <!-- Linha oculta que aparece ao clicar -->
+    <tr class="descricao-row" style="display: none;">
+      <td colspan="15" class="text-muted">
+        <!-- Conteúdo da descrição será inserido via JS -->
+      </td>
+    </tr>
+  </tbody>
+</table>
+            <td colspan="15">Nenhum pagamento registrado.</td>
+        </tr>
+    </tbody>
+</table>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-4" id="clientes" style="display: none;"> <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Clientes</h4>
+            <button id="btnNovoCliente" class="btn btn-primary">Novo Registro</button> </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome/Razão Social</th>
+                    <th>Tipo</th>
+                    <th>CPF/CNPJ</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Cidade</th>
+                </tr>
+            </thead>
+            <tbody id="lista-clientes">
+                <tr>
+                    <td colspan="6">Clique em "Listar" para carregar os clientes do banco de dados.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-5" id="cadastro-cliente" style="display: none;">
+        <h4>Cadastro de Cliente</h4>
+        <form method="POST" action="salvar_cliente.php">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Tipo Cliente</label>
+                    <select name="tipo_cliente" class="form-control">
+                        <option value="fisico">Físico</option>
+                        <option value="juridico">Jurídico</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">CPF/CNPJ</label>
+                    <input type="text" name="cpf_cnpj" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Razão Social</label>
+                    <input type="text" name="razao_social" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Telefone</label>
+                    <input type="text" name="telefone" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Contato Responsável</label>
+                    <input type="text" name="contato_responsavel" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Data de Aniversário</label>
+                    <input type="date" name="data_aniversario" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">CEP</label>
+                    <input type="text" name="cep" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Endereço</label>
+                    <input type="text" name="endereco" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Número</label>
+                    <input type="text" name="numero" class="form-control">
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label">Complemento</label>
+                    <input type="text" name="complemento" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Bairro</label>
+                    <input type="text" name="bairro" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Cidade</label>
+                    <input type="text" name="cidade" class="form-control">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">UF</label>
+                    <input type="text" name="uf" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Exibir CPF/CNPJ na C.E.S Simples</label>
+                <select name="exibir_ces" class="form-control">
+                    <option value="sim">Sim</option>
+                    <option value="nao">Não</option>
+                </select>
+            </div>
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">Salvar</button>
+                <button type="button" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="container mt-5" id="cadastro-conta-pagar" style="display: none;">
+        <h4>Financeiro - Conta a Pagar</h4>
+        <div class="card-body">
+            <div class="mb-3 financeiro-header rounded p-2 fw-bold">Conta à Pagar</div>
+
+            <div class="container-fluid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+
+                <div class="form-group">
+                    <label for="data_emissao">Data Emissão</label>
+                    <input type="date" id="data_emissao" class="form-control financeiro-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="documento_nf">Documento/NF</label>
+                    <input type="text" id="documento_nf" placeholder="Documento/NF" class="form-control financeiro-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="tipo">Tipo</label>
+                    <select id="tipo" class="form-select financeiro-select" name="tipo">
+                        <option value="">Selecione o tipo</option>
+                        <option value="Pagamento Funcionario">Pagamento Funcionario</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="conta_corrente">Conta Corrente</label>
+                    <select id="conta_corrente" class="form-select financeiro-select" name="conta_corrente">
+                        <option value="">Selecione a conta</option>
+                        <option value="CAIXA INTERNO – C/C 0000">CAIXA INTERNO – C/C 0000</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fornecedor">Fornecedor</label>
+                    <select id="fornecedor" class="form-select financeiro-select" name="fornecedor">
+                        <option value="">Selecione o fornecedor</option>
+                        <option value="65 MATERIAS ELETRICOS">65 MATERIAS ELETRICOS</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="funcionario">Funcionário</label>
+                    <select id="funcionario" class="form-select financeiro-select" name="funcionario">
+                        <option value="">Selecione o funcionário</option>
+                        <option value="ADMINISTRADOR DA EMPRESA">ADMINISTRADOR DA EMPRESA</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="data_vencimento">Data Vencimento</label>
+                    <input type="date" id="data_vencimento" class="form-control financeiro-input" />
+                </div>
+
+                <div class="form-group">
+                    <label for="Valor_previsto">Valor Previsto</label>
+                    <input type="number" id="Valor_previsto" placeholder="Valor_previsto" class="form-control financeiro-input" value="0.00" />
+                </div>
+
+                <div class="form-group">
+                    <label for="plano_contas">Plano de Contas</label>
+                    <select id="plano_contas" class="form-select financeiro-select" name="plano_contas">
+                        <option value="">Selecione o plano</option>
+                        <option value="DESPESAS COM FINANCEIRO">DESPESAS COM FINANCEIRO</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subcategoria">SubCategoria (Despesa)</label>
+                    <select id="subcategoria" class="form-select financeiro-select" name="subcategoria">
+                        <option value="">Selecione a subcategoria</option>
+                        <option value="5.5.8 - AGUA">5.5.8 - AGUA</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="repeticao">Repetição Mensal</label>
+                    <select id="repeticao" class="form-select financeiro-select" name="repeteicao">
+                        <option value="">Selecione</option>
+                        <option value="1x">1x</option>
+                        <option value="2x">2x</option>
+                        <option value="3x">3x</option>
+                        <option value="4x">4x</option>
+                        <option value="5x">5x</option>
+                        <option value="6x">6x</option>
+                        <option value="7x">7x</option>
+                        <option value="8x">8x</option>
+                        <option value="9x">9x</option>
+                        <option value="10x">10x</option>
+                        <option value="11x">11x</option>
+                        <option value="12x">12x</option>
+                        <option value="13x">13x</option>
+                        <option value="14x">14x</option>
+                        <option value="15x">15x</option>
+                        <option value="16x">16x</option>
+                        <option value="17x">17x</option>
+                        <option value="18x">18x</option>
+                        <option value="19x">19x</option>
+                        <option value="20x">20x</option>
+                        <option value="24x">24x</option>
+                        <option value="30x">30x</option>
+                        <option value="36x">36x</option>
+                        <option value="48x">48x</option>
+                        <option value="60x">60x</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="forma_pagamento">Forma Pagamento.</label>
+                    <select id="forma_pagamento" class="form-select financeiro-select" name="forma_pagamento">
+                        <option value="">Selecione</option>
+                        <option value="BOLETO">BOLETO</option>
+                        <option value="A_VISTA">À VISTA</option>
+                        <option value="PARCELADO">PARCELADO</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="situacao">Situação Atual</label>
+                    <select id="situacao" class="form-select financeiro-select" name="situacao">
+                        <option value="">Selecione</option>
+                        <option value="Liquidado">Liquidado</option>
+                        <option value="Vencido">Vencido</option>
+                        <option value="Cartorio">Cartório</option>
+                        <option value="Protestado">Protestado</option>
+                        <option value="Aviso_de_cobranca">Aviso de cobrança</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="grid-column: span 3;">
+                    <label for="descricao">Descrição Complementar</label>
+                    <textarea id="descricao" placeholder="Descrição" class="form-control financeiro-input"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Rateio de Centro de Custos</label>
+            <input type="text" class="form-control" placeholder="Sem rateios definidos" disabled class="financeiro-input">
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <label class="form-label">Juros / Multa</label>
+                <input type="number" id="juros_multa" placeholder="Juros/Multa" class="financeiro-input" value="0.00">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Desconto</label>
+                <input type="number" id="desconto" placeholder="Desconto" class="financeiro-input" value="0.00">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Data Liquidação</label>
+                <input type="date" id="data_liquidacao" placeholder="Data de Liquidação" class="financeiro-input">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Total Pago</label>
+                <input type="number" id="total_pago" placeholder="Total Pago" class="financeiro-input" value="0.00">
+            </div>
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="button" id="salvar-conta" class="btn btn-success">Salvar Conta</button>
+            <button type="reset" class="btn btn-danger">Cancelar</button>
+        </div>
+    </div>
+
+
+    <footer class="text-center mt-4 mb-2 text-muted">
+        Copyright © 2025 bsa.com.br
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Apenas UM document.addEventListener('DOMContentLoaded') para todo o seu JavaScript
+        document.addEventListener('DOMContentLoaded', function () {
+
+            // -------------------------------------------------------------
+            // Seção para SALVAR CONTA (botão "Salvar Conta")
+            // -------------------------------------------------------------
+            document.getElementById('salvar-conta').addEventListener('click', function (event) {
+                event.preventDefault(); // Impede que o formulário recarregue a página
+
+                const dados = {
+                    data_emissao: document.getElementById('data_emissao').value,
+                    tipo: document.getElementById('tipo').value,
+                    conta_corrente: document.getElementById('conta_corrente').value,
+                    documento_nf: document.getElementById('documento_nf').value,
+                    fornecedor: document.getElementById('fornecedor').value,
+                    funcionario: document.getElementById('funcionario').value,
+                    data_vencimento: document.getElementById('data_vencimento').value,
+                    Valor_previsto: document.getElementById('Valor_previsto').value,
+                    plano_contas: document.getElementById('plano_contas').value,
+                    subcategoria: document.getElementById('subcategoria').value,
+                    forma_pagamento: document.getElementById('forma_pagamento').value,
+                    situacao: document.getElementById('situacao').value,
+                    repeticao: document.getElementById('repeticao').value,
+                    descricao: document.getElementById('descricao').value,
+                    juros_multa: document.getElementById('juros_multa').value,
+                    desconto: document.getElementById('desconto').value,
+                    data_liquidacao: document.getElementById('data_liquidacao').value,
+                    total_pago: document.getElementById('total_pago').value
+                };
+
+                fetch('salvar_conta.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                })
+                .then(response => response.text()) // Se salvar_conta.php retorna texto (ex: "Salvo com sucesso!")
+                .then(result => {
+                    alert(result);
+                    carregarEExibirContas(); // Chama a função para atualizar a lista
+                })
+                .catch(error => {
+                    console.error('Erro ao salvar a conta:', error);
+                    alert('Erro ao salvar a conta. Verifique o console para detalhes.');
+                });
+            });
+
+            // -------------------------------------------------------------
+            // Funções para Controle de Seções/Abas
+            // -------------------------------------------------------------
+            function esconderTodasAsSecoes() {
+                document.getElementById('clientes').style.display = 'none';
+                document.getElementById('cadastro-cliente').style.display = 'none';
+                document.getElementById('cadastro-conta-pagar').style.display = 'none'; // ID corrigido aqui
+                document.getElementById('listar-pagamentos-secao').style.display = 'none';
+            }
+
+            // Função para carregar e exibir as contas na tabela
+            function carregarEExibirContas() {
+    fetch('listar_contas.php')
+        .then(res => {
+            if (!res.ok) {
+                throw new Error('Erro na requisição: ' + res.statusText);
+            }
+            return res.json(); // Esperamos JSON do listar_contas.php
+        })
+        .then(contas => {
+            const tbody = document.getElementById('lista-contas-tbody');
+            tbody.innerHTML = ''; // Limpa o conteúdo atual
+
+            if (contas.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="13">Nenhum pagamento registrado.</td></tr>';
+            } else {
+                contas.forEach(conta => {
+                    const row = `
+                        <tr class="conta-row" data-conta-id="${conta.id}">
+                            <td>${conta.fornecedor || ''}</td>
+                            <td>${conta.documento_nf || ''}</td>
+                            <td>${conta.data_vencimento ? new Date(conta.data_vencimento).toLocaleDateString('pt-BR') : ''}</td>
+                            <td>R$ ${parseFloat(conta.Valor_previsto || 0).toFixed(2).replace('.', ',')}</td>
+                            <td>${conta.situacao || ''}</td>
+                            <td>${conta.tipo || ''}</td>
+                            <td>${conta.conta_corrente || ''}</td>
+                            <td>${conta.plano_contas || ''}</td>
+                            <td>${conta.repeticao || ''}</td>
+                            <td>${conta.forma_pagamento || ''}</td>
+                            <td>R$ ${parseFloat(conta.juros_multa || 0).toFixed(2).replace('.', ',')}</td>
+                            <td>R$ ${parseFloat(conta.desconto || 0).toFixed(2).replace('.', ',')}</td>
+                            <td>${conta.data_liquidacao ? new Date(conta.data_liquidacao).toLocaleDateString('pt-BR') : ''}</td>
+                            <td>R$ ${parseFloat(conta.total_pago || 0).toFixed(2).replace('.', ',')}</td>
+                        </tr>
+                        <tr class="descricao-expandida-row" data-conta-id="${conta.id}" style="display: none;">
+                            <td colspan="13" class="text-muted">
+                                <strong>Descrição:</strong> ${conta.descricao || 'Nenhuma descrição fornecida.'}
+                            </td>
+                        </tr>
+                    `;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+
+                // Adicionar evento de clique APÓS as linhas serem inseridas no DOM
+                document.querySelectorAll('.conta-row').forEach(row => {
+                    row.addEventListener('click', function() {
+                        const contaId = this.dataset.contaId;
+                        // Use a nova classe para evitar conflitos se houver outras 'descricao-row'
+                        const descricaoRow = document.querySelector(`.descricao-expandida-row[data-conta-id="${contaId}"]`);
+                        if (descricaoRow) {
+                            descricaoRow.style.display = descricaoRow.style.display === 'none' ? 'table-row' : 'none';
+                        }
+                    });
+                });
+            }
+        })
+        .catch(error => {
+            document.getElementById('lista-contas-tbody').innerHTML = '<tr><td colspan="13">Erro ao carregar contas: ' + error.message + '</td></tr>';
+            console.error('Erro ao carregar contas:', error);
+        });
+}
+            
+
+            // -------------------------------------------------------------
+            // Event Listeners para o Menu de Navegação (dropdowns)
+            // -------------------------------------------------------------
+
+            // Lógica para Clientes -> Listar
+            document.querySelectorAll('.dropdown-item[href="#clientes"]').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    esconderTodasAsSecoes();
+                    fetch('listar_clientes.php')
+                        .then(response => response.text())
+                        .then(data => {
+                            document.getElementById('lista-clientes').innerHTML = data;
+                            document.getElementById('clientes').style.display = "block";
+                            document.getElementById('btnNovoCliente').style.display = "inline-block"; // Ajustado para aparecer aqui
+                            document.getElementById('clientes').scrollIntoView({ behavior: 'smooth' });
+                        })
+                        .catch(error => {
+                            document.getElementById('lista-clientes').innerHTML = '<tr><td colspan="6">Erro ao carregar os dados.</td></tr>';
+                            console.error('Erro ao carregar clientes:', error);
+                        });
+                });
+            });
+
+            // Lógica para Clientes -> Novo
+            document.querySelector('.dropdown-item[href="#cadastro-cliente"]').addEventListener('click', function (e) {
+                e.preventDefault();
+                esconderTodasAsSecoes();
+                document.getElementById('cadastro-cliente').style.display = "block";
+                document.getElementById('cadastro-cliente').scrollIntoView({ behavior: 'smooth' });
+                document.getElementById('btnNovoCliente').style.display = "none";
+            });
+
+            // Lógica para Financeiro -> Contas (formulário de Nova Conta)
+            document.querySelectorAll('.dropdown-item').forEach(link => {
+                if (link.textContent.trim() === 'Contas') {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        esconderTodasAsSecoes();
+                        document.getElementById('cadastro-conta-pagar').style.display = "block"; // ID corrigido aqui
+                        document.getElementById('cadastro-conta-pagar').scrollIntoView({ behavior: 'smooth' });
+                    });
+                }
+                // Lógica para Financeiro -> Listar Pagamentos (tabela de contas)
+                if (link.textContent.trim() === 'Listar Pagamentos') {
+                    link.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        esconderTodasAsSecoes();
+                        document.getElementById('listar-pagamentos-secao').style.display = "block";
+                        document.getElementById('listar-pagamentos-secao').scrollIntoView({ behavior: 'smooth' });
+                        carregarEExibirContas(); // Carrega a lista de contas aqui
+                    });
+                }
+            });
+            const btnNovo = document.getElementById("btnNovoCliente");
+            const formCliente = document.getElementById("cadastro-cliente");
+            const btnCancelar = document.getElementById("btnCancelar");
+
+            if (btnNovo) {
+                btnNovo.addEventListener("click", () => {
+                    esconderTodasAsSecoes();
+                    formCliente.style.display = "block";
+                    btnNovo.style.display = "none";
+                    formCliente.scrollIntoView({ behavior: "smooth" });
+                });
+            }
+
+            if (btnCancelar) {
+                btnCancelar.addEventListener("click", () => {
+                    formCliente.style.display = "none";
+                    document.getElementById('clientes').style.display = "block";
+                    btnNovo.style.display = "inline-block";
+                });
+            }
+
+            esconderTodasAsSecoes();
+
+        });
+document.addEventListener("DOMContentLoaded", function () {
+    const rows = document.querySelectorAll(".clickable-row");
+
+    rows.forEach((row) => {
+        row.addEventListener("click", () => {
+            const nextRow = row.nextElementSibling;
+            const descricao = row.getAttribute("data-descricao");
+
+            // Alterna visibilidade
+            if (nextRow.style.display === "none") {
+                nextRow.querySelector("td").textContent = descricao;
+                nextRow.style.display = "table-row";
+            } else {
+                nextRow.style.display = "none";
+            }
+        });
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const linhas = document.querySelectorAll(".linha-pagamento");
+
+    linhas.forEach((linha) => {
+        linha.addEventListener("click", () => {
+            const linhaDescricao = linha.nextElementSibling;
+            const descricao = linha.dataset.descricao;
+
+            if (linhaDescricao.style.display === "none" || linhaDescricao.style.display === "") {
+                linhaDescricao.querySelector("td").textContent = descricao;
+                linhaDescricao.style.display = "table-row";
+            } else {
+                linhaDescricao.style.display = "none";
+            }
+        });
+    });
+});
+    </script>
+</body>
+</html>
