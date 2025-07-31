@@ -1,14 +1,14 @@
 <?php
-// Ativar exibição de erros para depuração (REMOVA EM PRODUÇÃO!)
+echo "DEBUG: Running salvar_conta.php version 20250731_1440<br>"; // Add this line
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+// ... rest of your code
 
-// Configurações do banco de dados
 $host = "localhost";
-$user = "root"; // substitua se não for "root"
-$password = ""; // coloque a senha do seu MySQL, se houver
-$dbname = "bsa_clientes"; // nome correto do banco
+$user = "root";
+$password = "";
+$dbname = "bsa"; // Change to the correct database name
 
 $conn = new mysqli($host, $user, $password, $dbname);
 
@@ -18,54 +18,54 @@ if ($conn->connect_error) {
     exit();
 }
 
-$dadosJson = file_get_contents("php://input");
-$dados = json_decode($dadosJson, true);
+// --- MUDANÇA CRUCIAL AQUI ---
+// Coletando dados diretamente de $_POST
+$data_emissao    = $_POST['data_emissao'] ?? null;
+$tipo            = $_POST['tipo'] ?? null;
+$conta_corrente  = $_POST['conta_corrente'] ?? null;
+$documento_nf    = $_POST['documento_nf'] ?? null;
+$fornecedor      = $_POST['fornecedor'] ?? null;
+$funcionario     = $_POST['funcionario'] ?? null;
+$data_vencimento = $_POST['data_vencimento'] ?? null;
+// Use 'subtotall' (minúsculo v) se esse for o name no seu HTML
+$subtotal  = floatval($_POST['subtotal'] ?? $_POST['subtotal$l'] ?? 0); 
+$plano_contas    = $_POST['plano_contas'] ?? null;
+$subcategoria    = $_POST['subcategoria'] ?? null;
+$forma_pagamento = $_POST['forma_pagamento'] ?? null;
+$situacao        = $_POST['situacao'] ?? null;
+// Verifique o name no HTML para 'repeticao' vs 'repeteicao'
+$repeticao       = $_POST['repeticao'] ?? $_POST['repeteicao'] ?? null; 
+$descricao       = $_POST['descricao'] ?? null;
+$juros_multa     = floatval($_POST['juros_multa'] ?? 0);
+$desconto        = floatval($_POST['desconto'] ?? 0);
+$data_liquidacao = $_POST['data_liquidacao'] ?? null;
+$total_pago      = floatval($_POST['total_pago'] ?? 0);
+// --- FIM DA MUDANÇA CRUCIAL ---
 
-// Verifica se os dados foram decodificados corretamente
-if (json_last_error() !== JSON_ERROR_NONE || empty($dados)) {
-    http_response_code(400); // Bad Request
-    echo "Erro: Dados JSON inválidos ou vazios.";
+// Validar se dados essenciais existem antes de prosseguir
+if (empty($data_emissao) || empty($tipo) || empty($data_vencimento) || empty($subtotal)) {
+    http_response_code(400);
+    echo "Erro: Campos essenciais (Data Emissão, Tipo, Data Vencimento, Valor Previsto) não podem estar vazios.";
     exit();
 }
 
-$data_emissao = $dados['data_emissao'] ?? null;
-$tipo = $dados['tipo'] ?? null;
-$conta_corrente = $dados['conta_corrente'] ?? null;
-$documento_nf = $dados['documento_nf'] ?? null;
-$fornecedor = $dados['fornecedor'] ?? null;
-$funcionario = $dados['funcionario'] ?? null;
-$data_vencimento = $dados['data_vencimento'] ?? null;
-$Valor_previsto = floatval($dados['Valor_previsto'] ?? 0); // Corrigido para 'Valor_previsto' e floatval
-$plano_contas = $dados['plano_contas'] ?? null;
-$subcategoria = $dados['subcategoria'] ?? null;
-
-$forma_pagamento = $dados['forma_pagamento'] ?? null; // CHAVE DO JS
-$situacao = $dados['situacao'] ?? null; // CHAVE DO JS
-$repeticao = $dados['repeticao'] ?? null; // CHAVE DO JS
-$descricao = $dados['descricao'] ?? null; // CHAVE DO JS
-
-
-$juros_multa = floatval($dados['juros_multa'] ?? 0);
-$desconto = floatval($dados['desconto'] ?? 0);
-$data_liquidacao = $dados['data_liquidacao'] ?? null;
-$total_pago = floatval($dados['total_pago'] ?? 0);
-
 $stmt = $conn->prepare("INSERT INTO contas_pagar (
     data_emissao, tipo, conta_corrente, documento_nf, fornecedor, funcionario,
-    data_vencimento, Valor_previsto, plano_contas, subcategoria, forma_pagamento,
+    data_vencimento, subtotal, plano_contas, subcategoria, forma_pagamento,
     situacao, repeticao, descricao,
     juros_multa, desconto, data_liquidacao, total_pago
 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-// Verifica se a preparação da query falhou
 if ($stmt === false) {
     http_response_code(500);
     echo "Erro na preparação da query: " . $conn->error;
     exit();
 }
 
+// Verifique cuidadosamente a string de tipos (18 parâmetros, verifique os tipos de suas colunas no DB!)
+// Exemplo: 'ssssssssdsssssddsd' se as datas são strings, subtotal$subtotal double, juros/desconto/total double
 $stmt->bind_param(
-    "ssssssssssssssssss", // Certifique-se de que o número de 's' corresponde ao número de parâmetros
+    "ssssssssdsssssddsd", // Ajuste conforme os tipos de suas colunas no DB!
     $data_emissao,
     $tipo,
     $conta_corrente,
@@ -73,23 +73,26 @@ $stmt->bind_param(
     $fornecedor,
     $funcionario,
     $data_vencimento,
-    $Valor_previsto, 
+    $subtotal,
     $plano_contas,
     $subcategoria,
-    $forma_pagamento, 
-    $situacao,        
-    $repeticao,       
-    $descricao,       
-    $juros_multa,     
-    $desconto,        
+    $forma_pagamento,
+    $situacao,
+    $repeticao,
+    $descricao,
+    $juros_multa,
+    $desconto,
     $data_liquidacao,
-    $total_pago       
+    $total_pago
 );
 
 if ($stmt->execute()) {
     echo "Conta salva com sucesso!";
+    // Redireciona para a página principal após salvar
+    header("Location: Sistema_bsa.php");
+    exit();
 } else {
-    http_response_code(500); // Erro do servidor
+    http_response_code(500);
     echo "Erro ao salvar: " . $stmt->error;
 }
 

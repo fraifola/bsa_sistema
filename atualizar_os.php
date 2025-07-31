@@ -1,49 +1,53 @@
 <?php
-// Arquivo: salvar_os.php
-header('Content-Type: application/json'); // Garante que a resposta será JSON
+// Arquivo: atualizar_os.php
+header('Content-Type: application/json');
 
 require_once 'conexao.php'; // Inclui o arquivo de conexão
 
-$response = array(); // Array para a resposta JSON
+$response = array();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // MODIFICAÇÃO: Pega cliente_id em vez de cliente
-    $cliente_id = isset($_POST['cliente_id']) ? (int)$_POST['cliente_id'] : 0;
+    $id_os = isset($_POST['id']) ? (int)$_POST['id'] : 0;
+    // MODIFICAÇÃO: Pega tipo_cliente em vez de cliente
+    $tipo_cliente = isset($_POST['tipo_cliente']) ? (int)$_POST['tipo_cliente'] : 0;
     $servico = isset($_POST['servico']) ? $conn->real_escape_string($_POST['servico']) : '';
     $dataInicio = isset($_POST['data_inicio']) ? $conn->real_escape_string($_POST['data_inicio']) : '';
     $horaInicio = isset($_POST['hora_inicio']) ? $conn->real_escape_string($_POST['hora_inicio']) : '';
     $horaFim = isset($_POST['hora_fim']) ? $conn->real_escape_string($_POST['hora_fim']) : '';
     $observacoes = isset($_POST['observacoes']) ? $conn->real_escape_string($_POST['observacoes']) : '';
 
-    // Validação
-    if ($cliente_id === 0 || empty($servico) || empty($dataInicio) || empty($horaInicio)) {
+    if ($id_os === 0 || $tipo_cliente === 0 || empty($dataInicio) || empty($horaInicio) || empty($servico)) {
         $response['success'] = false;
-        $response['message'] = "Dados obrigatórios (cliente, serviço, data/hora de início) estão faltando.";
+        $response['message'] = "Dados inválidos para atualização. ID da OS, ID do cliente, data, hora de início ou serviço estão faltando.";
         echo json_encode($response);
         exit();
     }
 
-    // Concatena data e hora para o formato DATETIME
     $data_hora_inicio = $dataInicio . ' ' . $horaInicio . ':00';
     $data_hora_fim = !empty($horaFim) ? $dataInicio . ' ' . $horaFim . ':00' : NULL;
 
-    // Prepara a query SQL para INSERT
-    // MODIFICAÇÃO: Insere cliente_id
-    $sql = "INSERT INTO ordens_servico (cliente_id, servico, data_inicio, data_fim, observacoes) VALUES (?, ?, ?, ?, ?)";
+    // Prepara a query SQL para UPDATE
+    // MODIFICAÇÃO: Atualiza tipo_cliente
+    $sql = "UPDATE ordens_servico SET
+                tipo_cliente = ?,
+                servico = ?,
+                data_inicio = ?,
+                data_fim = ?,
+                observacoes = ?
+            WHERE id = ?";
 
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // 'issss' indica que o primeiro parâmetro é integer (cliente_id) e os outros 4 são strings
-        $stmt->bind_param("issss", $cliente_id, $servico, $data_hora_inicio, $data_hora_fim, $observacoes);
+        // 'issssi' -> 1 integer (tipo_cliente), 4 strings, 1 integer (id)
+        $stmt->bind_param("issssi", $tipo_cliente, $servico, $data_hora_inicio, $data_hora_fim, $observacoes, $id_os);
 
         if ($stmt->execute()) {
             $response['success'] = true;
-            $response['message'] = "Ordem de Serviço salva com sucesso!";
-            $response['id'] = $conn->insert_id; // Opcional: retorna o ID da nova OS
+            $response['message'] = "Ordem de Serviço atualizada com sucesso!";
         } else {
             $response['success'] = false;
-            $response['message'] = "Erro ao salvar Ordem de Serviço: " . $stmt->error;
+            $response['message'] = "Erro ao atualizar Ordem de Serviço: " . $stmt->error;
         }
         $stmt->close();
     } else {

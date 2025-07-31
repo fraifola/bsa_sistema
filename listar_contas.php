@@ -8,7 +8,7 @@ error_reporting(E_ALL);
 $host = "localhost";
 $usuario = "root";
 $senha = "";
-$banco = "bsa_clientes"; // Certifique-se de que este é o banco correto
+$banco = "bsa"; // Certifique-se de que este é o banco correto
 
 // Conexão com o banco de dados
 $conn = new mysqli($host, $usuario, $senha, $banco);
@@ -23,12 +23,11 @@ if ($conn->connect_error) {
 
 // Prepara a consulta SQL para selecionar todas as contas
 $sql = "SELECT
-            id,
             data_emissao,
             fornecedor,
             documento_nf,
             data_vencimento,
-            Valor_previsto,
+            subtotal,
             situacao,
             tipo,
             conta_corrente,
