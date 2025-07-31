@@ -6,9 +6,13 @@
     <title>BSA - Propostas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+
     <style>
         body {
             background-color: #f8f9fa;
+            padding-top: 56px; /* Ajuste para o navbar fixo, se for usar */
         }
         .navbar {
             background-color: #7fc241;
@@ -28,12 +32,11 @@
         }
         /* 🌈 Cores personalizadas para o Financeiro */
         .financeiro-header {
-            background-color: #54ab6f; /* verde-claro */
+            background-color: #7fc241; /* verde-claro */
             color: white;
         }
-        /* Corrigido o seletor para o campo de seleção, era 'financeiro-select-verde' no CSS e 'financeiro-select' no HTML */
         .financeiro-select, .financeiro-select-verde {
-            background-color: #ffffff !important; /* Certifique-se que essa cor é intencional, parece azul */
+            background-color: #ffffff !important;
             color: rgb(0, 0, 0) !important;
             padding: 8px;
             border-radius: 4px;
@@ -49,97 +52,107 @@
             box-sizing: border-box;
             margin-bottom: 10px;
         }
-    /* ... (seu CSS existente) ... */
+        /* Estilos para a tabela de Contas Registradas */
+        #listar-pagamentos-secao .table thead th {
+            background-color: #e9ecef;
+            text-align: left;
+        }
+        #listar-pagamentos-secao .table tbody td {
+            text-align: left;
+            padding: 8px 12px;
+            max-width: 190px;
+        }
+        #listar-pagamentos-secao .table th:nth-child(4),
+        #listar-pagamentos-secao .table td:nth-child(4),
+        #listar-pagamentos-secao .table th:nth-child(10),
+        #listar-pagamentos-secao .table td:nth-child(10),
+        #listar-pagamentos-secao .table th:nth-child(11),
+        #listar-pagamentos-secao .table td:nth-child(11),
+        #listar-pagamentos-secao .table th:nth-child(13),
+        #listar-pagamentos-secao .table td:nth-child(13) {
+            text-align: right;
+        }
+        #listar-pagamentos-secao .table th:nth-child(3),
+        #listar-pagamentos-secao .table td:nth-child(3),
+        #listar-pagamentos-secao .table th:nth-child(5),
+        #listar-pagamentos-secao .table td:nth-child(5),
+        #listar-pagamentos-secao .table th:nth-child(12),
+        #listar-pagamentos-secao .table td:nth-child(12) {
+            text-align: center;
+        }
+        #lista-contas-tbody td[colspan="13"] {
+            text-align: center;
+        }
+        #listar-pagamentos-secao .table th,
+        #listar-pagamentos-secao .table td {
+            padding: 10px 12px;
+            font-size: 11px;
+            vertical-align: middle;
+        }
+        #listar-pagamentos-secao .table td:nth-child(7),
+        #listar-pagamentos-secao .table td:nth-child(8) {
+            white-space: normal;
+            word-break: break-word;
+            max-width: 190px;
+        }
+        #listar-pagamentos-secao .table td:nth-child(1),
+        #listar-pagamentos-secao .table td:nth-child(6) {
+            white-space: normal;
+            word-break: break-word;
+        }
+        .descricao-expandida-row td {
+            background-color: #f1f1f1;
+            font-style: italic;
+            padding: 10px;
+        }
+        #listar-pagamentos-secao .table tbody tr:nth-child(odd) {
+            background-color: #f4f4f4;
+        }
+        .descricao-row td {
+            background-color: #f1f1f1;
+            font-style: italic;
+            padding: 10px;
+        }
+        .clickable-row {
+            cursor: pointer;
+        }
+        .linha-pagamento {
+            cursor: pointer;
+        }
+        .descricao-extra td {
+            font-style: italic;
+            padding: 8px 12px;
+        }
 
-    /* Estilos para a tabela de Contas Registradas */
-    #listar-pagamentos-secao .table thead th {
-        background-color: #e9ecef;
-        /* Alinhamento padrão para os cabeçalhos */
-        text-align: left; /* Ou center se preferir para todos os cabeçalhos */
-    }
-
-    #listar-pagamentos-secao .table tbody td {
-        /* Alinhamento padrão para as células de dados */
-        text-align: left;
-        padding: 8px 12px;    /* Dá um respiro entre os textos */
-        max-width: 190px;
-}   
-    /* Alinhamento à direita para colunas específicas (valores numéricos) */
-    /* Usamos nth-child para selecionar as colunas pelo índice */
-    #listar-pagamentos-secao .table th:nth-child(4), /* Cabeçalho 'Valor' */
-    #listar-pagamentos-secao .table td:nth-child(4), /* Célula 'Valor' */
-    #listar-pagamentos-secao .table th:nth-child(10), /* Cabeçalho 'Juros/Multa' */
-    #listar-pagamentos-secao .table td:nth-child(10), /* Célula 'Juros/Multa' */
-    #listar-pagamentos-secao .table th:nth-child(11), /* Cabeçalho 'Desconto' */
-    #listar-pagamentos-secao .table td:nth-child(11), /* Célula 'Desconto' */
-    #listar-pagamentos-secao .table th:nth-child(13), /* Cabeçalho 'Total Pago' */
-    #listar-pagamentos-secao .table td:nth-child(13) { /* Célula 'Total Pago' */
-        text-align: right;
-    }
-
-    /* Alinhamento centralizado para algumas colunas (datas e status, se desejar) */
-    #listar-pagamentos-secao .table th:nth-child(3), /* Data Venc. */
-    #listar-pagamentos-secao .table td:nth-child(3),
-    #listar-pagamentos-secao .table th:nth-child(5), /* Status */
-    #listar-pagamentos-secao .table td:nth-child(5),
-    #listar-pagamentos-secao .table th:nth-child(12), /* Data Liquid. */
-    #listar-pagamentos-secao .table td:nth-child(12) {
-        text-align: center;
-    }
-
-    /* Para a mensagem "Nenhum pagamento registrado." */
-    #lista-contas-tbody td[colspan="13"] {
-        text-align: center;
-    }
-
-    /* ... (resto do seu CSS) ... */
-    /* Melhor legibilidade e espaçamento da tabela de Contas Registradas */
-    #listar-pagamentos-secao .table th,
-    #listar-pagamentos-secao .table td {
-        padding: 10px 12px;
-        font-size: 11px;
-        vertical-align: middle;
-    }
-
-    /* Permite quebra apenas controlada em colunas longas */
-    #listar-pagamentos-secao .table td:nth-child(7),  /* Conta Corrente */
-    #listar-pagamentos-secao .table td:nth-child(8) { /* Plano de Contas */
-        white-space: normal;       /* permite quebra controlada */
-        word-break: break-word;    /* quebra palavras longas */
-        max-width: 190px;          /* limita largura para evitar desconfiguração */
-    }
-    /* Permite quebra de linha para Fornecedor e Tipo */
-    #listar-pagamentos-secao .table td:nth-child(1),  /* Fornecedor */
-    #listar-pagamentos-secao .table td:nth-child(6) {  /* Tipo */
-        white-space: normal;     /* Permite que o texto quebre a linha */
-        word-break: break-word;  /* Quebra palavras longas se necessário */
-    }
-    .descricao-expandida-row td { /* Use a classe que definimos anteriormente */
-        background-color: #f1f1f1;
-        font-style: italic;
-        padding: 10px;
-    }
-
-    /* Alternância de cor em linhas */
-    #listar-pagamentos-secao .table tbody tr:nth-child(odd) {
-        background-color: #f4f4f4;
-    }
-.descricao-row td {
-    background-color: #f1f1f1;
-    font-style: italic;
-    padding: 10px;
-}
-.clickable-row {
-    cursor: pointer;
-}   
-.linha-pagamento {
-    cursor: pointer;
-}
-
-.descricao-extra td {
-    font-style: italic;
-    padding: 8px 12px;
-}
+        /* Estilos específicos para o FullCalendar */
+        #calendar {
+            max-width: 900px; /* Ajuste conforme a largura desejada */
+            margin: 40px auto;
+            font-size: 14px; /* Ajuste o tamanho da fonte */
+        }
+        .fc-toolbar-chunk h2 {
+            font-size: 1.5rem; /* Ajuste o tamanho do título do mês/semana */
+        }
+        .fc-button-group .fc-button {
+            background-color: #7fc241;
+            border-color: #7fc241;
+            color: white;
+        }
+        .fc-button-group .fc-button:hover {
+            background-color: #6da735;
+            border-color: #6da735;
+        }
+        .fc-button-active {
+            background-color: #5b8f2d !important;
+            border-color: #5b8f2d !important;
+        }
+        .fc-daygrid-day-number {
+            font-weight: bold;
+        }
+        .fc-event {
+            background-color: #7fc241; /* Cor padrão para eventos */
+            border-color: #7fc241;
+        }
     </style>
 </head>
 <body>
@@ -148,7 +161,7 @@
             <a class="navbar-brand" href="#">BSA</a>
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item mx-2"><a class="nav-link" href="#">Operacional</a></li>
+                    <li class="nav-item mx-2"><a class="nav-link" href="#" id="nav-operacional">Operacional</a></li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">CRM</a>
                         <ul class="dropdown-menu">
@@ -176,8 +189,8 @@
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Financeiro</a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
-                            <li><a class="dropdown-item" href="#">Contas</a></li>
-                            <li><a class="dropdown-item" href="#">Listar Pagamentos</a></li>
+                            <li><a class="dropdown-item" href="#cadastro-conta-pagar">Contas</a></li>
+                            <li><a class="dropdown-item" href="#listar-pagamentos-secao">Listar Pagamentos</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown mx-2">
@@ -211,47 +224,90 @@
 
     <hr>
 
+    <div class="container mt-4" id="operacional" style="display: block;">
+        <h4 class="mt-5">Agenda Operacional</h4>
+        <div id='calendar'></div>
+        <div class="mt-4">
+            <h5>Agendar Nova Ordem de Serviço</h5>
+            <form>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="os_cliente" class="form-label">Cliente</label>
+                        <select id="os_cliente" class="form-select">
+                            <option value="">Selecione o Cliente</option>
+                            <option value="Cliente A">Cliente A</option>
+                            <option value="Cliente B">Cliente B</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="os_servico" class="form-label">Serviço</label>
+                        <select id="os_servico" class="form-select">
+                            <option value="">Selecione o Serviço</option>
+                            <option value="Lavagem de Tanque">Lavagem de Tanque</option>
+                            <option value="Controle de Praga">Controle de Praga</option>
+                            <option value="Fumigação">Fumigação</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="os_data_inicio" class="form-label">Data Início</label>
+                        <input type="date" id="os_data_inicio" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="os_hora_inicio" class="form-label">Hora Início</label>
+                        <input type="time" id="os_hora_inicio" class="form-control">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="os_hora_fim" class="form-label">Hora Fim (Opcional)</label>
+                        <input type="time" id="os_hora_fim" class="form-control">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="os_observacoes" class="form-label">Observações</label>
+                    <textarea id="os_observacoes" class="form-control" rows="3" placeholder="Detalhes da Ordem de Serviço"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" id="btnSalvarOS">Salvar OS</button>
+                <button type="reset" class="btn btn-secondary">Limpar</button>
+            </form>
+        </div>
+    </div>
+
     <div class="container mt-4" id="listar-pagamentos-secao" style="display: none;">
         <h4 class="mt-5">Contas Registradas</h4>
         <table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Fornecedor</th>
-            <th>Documento</th>
-            <th>Data Venc.</th>
-            <th>Valor</th>
-            <th>Status</th>
-            <th>Tipo</th>
-            <th>Conta Corrente</th>
-            <th>Plano de Contas</th>   
-            <th>Repetição mensal</th>
-            <th>Forma Pagamento</th>
-            <th>Juros/Multa</th>
-            <th>Desconto</th>
-            <th>Data Liquid.</th>
-            <th>Total Pago</th>
-        </tr>
-    </thead>
-    <tbody id="lista-contas-tbody">
-    <!-- Linha oculta que aparece ao clicar -->
-    <tr class="descricao-row" style="display: none;">
-      <td colspan="15" class="text-muted">
-        <!-- Conteúdo da descrição será inserido via JS -->
-      </td>
-    </tr>
-  </tbody>
-</table>
-            <td colspan="15">Nenhum pagamento registrado.</td>
-        </tr>
-    </tbody>
-</table>
+            <thead>
+                <tr>
+                    <th>Fornecedor</th>
+                    <th>Documento</th>
+                    <th>Data Venc.</th>
+                    <th>Valor</th>
+                    <th>Status</th>
+                    <th>Tipo</th>
+                    <th>Conta Corrente</th>
+                    <th>Plano de Contas</th>
+                    <th>Repetição mensal</th>
+                    <th>Forma Pagamento</th>
+                    <th>Juros/Multa</th>
+                    <th>Desconto</th>
+                    <th>Data Liquid.</th>
+                    <th>Total Pago</th>
+                </tr>
+            </thead>
+            <tbody id="lista-contas-tbody">
+                <tr class="descricao-row" style="display: none;">
+                    <td colspan="15" class="text-muted">
+                        </td>
+                </tr>
             </tbody>
         </table>
-    </div>
+        </div>
 
-    <div class="container mt-4" id="clientes" style="display: none;"> <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="container mt-4" id="clientes" style="display: none;">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h4>Clientes</h4>
-            <button id="btnNovoCliente" class="btn btn-primary">Novo Registro</button> </div>
+            <button id="btnNovoCliente" class="btn btn-primary">Novo Registro</button>
+        </div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -531,10 +587,163 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Apenas UM document.addEventListener('DOMContentLoaded') para todo o seu JavaScript
+    
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/pt-br.js'></script> <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Inicialização do FullCalendar
+            var calendarEl = document.getElementById('calendar');
+            var calendar; // Declare a variável do calendário aqui para ser acessível globalmente no script
+
+            function initializeCalendar() {
+                calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth', // Visualização inicial: mês
+                    locale: 'pt-br', // Define o idioma para português do Brasil
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,timeGridWeek,timeGridDay' // botões de visualização
+                    },
+                    height: 'auto', // Faz o calendário preencher a altura disponível
+                    expandRows: true, // As linhas das semanas se expandem para preencher a altura
+                    editable: true, // Permite arrastar e redimensionar eventos
+                    selectable: true, // Permite selecionar datas/horários
+                    selectMirror: true, // Mostra um "espelho" do que seria criado ao selecionar
+                    events: [
+                        // Exemplo de eventos (você carregaria do seu banco de dados via PHP)
+                        {
+                            title: 'OS #123 - Cliente X',
+                            start: '2025-07-30T10:00:00',
+                            end: '2025-07-30T12:00:00',
+                            description: 'Limpeza de caixa d\'água no endereço tal.', // Exemplo de descrição
+                            color: '#7fc241' // Cor do evento
+                        },
+                        {
+                            title: 'Reunião interna',
+                            start: '2025-08-01T09:00:00',
+                            color: '#007bff' // Outra cor para outro tipo de evento
+                        }
+                        // Você pode adicionar uma URL para buscar eventos dinamicamente:
+                        /*
+                        url: 'listar_os_para_calendario.php', // Seu script PHP para retornar eventos em JSON
+                        method: 'GET',
+                        failure: function() {
+                            alert('Erro ao carregar os eventos!');
+                        }
+                        */
+                    ],
+                    select: function(info) {
+                        // Função chamada quando o usuário seleciona uma data/intervalo
+                        // Preenche o formulário de nova OS com as datas selecionadas
+                        document.getElementById('os_data_inicio').value = info.startStr.split('T')[0];
+                        document.getElementById('os_hora_inicio').value = info.startStr.split('T')[1] ? info.startStr.split('T')[1].substring(0, 5) : '';
+                        document.getElementById('os_hora_fim').value = info.endStr.split('T')[1] ? info.endStr.split('T')[1].substring(0, 5) : '';
+                        
+                        // Opcional: rolar para a seção do formulário
+                        document.getElementById('operacional').scrollIntoView({ behavior: 'smooth' });
+
+                        // Para adicionar um evento diretamente ao selecionar no calendário:
+                        /*
+                        let title = prompt('Nome da OS:');
+                        if (title) {
+                            calendar.addEvent({
+                                title: title,
+                                start: info.startStr,
+                                end: info.endStr,
+                                allDay: info.allDay,
+                                color: '#7fc241'
+                            });
+                        }
+                        calendar.unselect();
+                        */
+                    },
+                    eventClick: function(info) {
+                        // Função chamada quando o usuário clica em um evento existente
+                        // Você pode exibir um modal para ver/editar os detalhes da OS
+                        let eventTitle = info.event.title;
+                        let eventStart = info.event.start ? info.event.start.toLocaleDateString('pt-BR') : '';
+                        let eventTime = info.event.start ? info.event.start.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
+                        let eventDescription = info.event.extendedProps.description || 'Nenhuma descrição.';
+
+                        alert(`Detalhes da OS:\nTítulo: ${eventTitle}\nData: ${eventStart}\nHora: ${eventTime}\nDescrição: ${eventDescription}`);
+                    },
+                    eventDrop: function(info) {
+                        // Chamado quando um evento é arrastado para uma nova data/hora
+                        // Você enviaria uma requisição AJAX para atualizar o evento no banco de dados
+                        console.log('Evento movido:', info.event.title, 'para:', info.event.start.toISOString());
+                        // Exemplo: updateEventInDatabase(info.event.id, info.event.start, info.event.end);
+                        alert(`OS "${info.event.title}" movida para ${info.event.start.toLocaleDateString('pt-BR')}`);
+                    },
+                    eventResize: function(info) {
+                        // Chamado quando um evento é redimensionado (muda a duração)
+                        console.log('Evento redimensionado:', info.event.title, 'nova duração:', info.event.start.toISOString(), '-', info.event.end.toISOString());
+                        // Exemplo: updateEventInDatabase(info.event.id, info.event.start, info.event.end);
+                        alert(`OS "${info.event.title}" redimensionada.`);
+                    }
+                });
+                calendar.render();
+            }
+
+            // -------------------------------------------------------------
+            // Lógica para Salvar Nova OS (do formulário)
+            // -------------------------------------------------------------
+            document.getElementById('btnSalvarOS').addEventListener('click', function() {
+                const cliente = document.getElementById('os_cliente').value;
+                const servico = document.getElementById('os_servico').value;
+                const dataInicio = document.getElementById('os_data_inicio').value;
+                const horaInicio = document.getElementById('os_hora_inicio').value;
+                const horaFim = document.getElementById('os_hora_fim').value;
+                const observacoes = document.getElementById('os_observacoes').value;
+
+                if (!cliente || !servico || !dataInicio || !horaInicio) {
+                    alert('Por favor, preencha Cliente, Serviço, Data de Início e Hora de Início.');
+                    return;
+                }
+
+                const startDateTime = `${dataInicio}T${horaInicio}`;
+                const endDateTime = horaFim ? `${dataInicio}T${horaFim}` : null; // Se não houver hora fim, pode ser um evento de dia inteiro ou ponto
+
+                // Adiciona o evento ao calendário
+                calendar.addEvent({
+                    title: `OS - ${servico} (${cliente})`,
+                    start: startDateTime,
+                    end: endDateTime,
+                    allDay: !endDateTime, // Se não tiver hora fim, é um evento de dia inteiro
+                    description: observacoes,
+                    color: '#7fc241' // Cor padrão
+                });
+
+                // Você enviaria esses dados para o seu servidor (PHP) para salvar no banco de dados
+                const osData = {
+                    cliente: cliente,
+                    servico: servico,
+                    data_inicio: dataInicio,
+                    hora_inicio: horaInicio,
+                    hora_fim: horaFim,
+                    observacoes: observacoes
+                };
+
+                fetch('salvar_os.php', { // Crie este arquivo PHP para salvar no BD
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(osData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Ordem de Serviço salva e adicionada à agenda!');
+                        // Limpa o formulário após salvar
+                        document.querySelector('form').reset();
+                    } else {
+                        alert('Erro ao salvar Ordem de Serviço: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao salvar OS:', error);
+                    alert('Erro de conexão ao tentar salvar a Ordem de Serviço.');
+                });
+            });
+
 
             // -------------------------------------------------------------
             // Seção para SALVAR CONTA (botão "Salvar Conta")
@@ -583,189 +792,152 @@
             // Funções para Controle de Seções/Abas
             // -------------------------------------------------------------
             function esconderTodasAsSecoes() {
+                document.getElementById('operacional').style.display = 'none'; // Adicionado
                 document.getElementById('clientes').style.display = 'none';
                 document.getElementById('cadastro-cliente').style.display = 'none';
-                document.getElementById('cadastro-conta-pagar').style.display = 'none'; // ID corrigido aqui
+                document.getElementById('cadastro-conta-pagar').style.display = 'none';
                 document.getElementById('listar-pagamentos-secao').style.display = 'none';
             }
 
             // Função para carregar e exibir as contas na tabela
             function carregarEExibirContas() {
-    fetch('listar_contas.php')
-        .then(res => {
-            if (!res.ok) {
-                throw new Error('Erro na requisição: ' + res.statusText);
-            }
-            return res.json(); // Esperamos JSON do listar_contas.php
-        })
-        .then(contas => {
-            const tbody = document.getElementById('lista-contas-tbody');
-            tbody.innerHTML = ''; // Limpa o conteúdo atual
-
-            if (contas.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="13">Nenhum pagamento registrado.</td></tr>';
-            } else {
-                contas.forEach(conta => {
-                    const row = `
-                        <tr class="conta-row" data-conta-id="${conta.id}">
-                            <td>${conta.fornecedor || ''}</td>
-                            <td>${conta.documento_nf || ''}</td>
-                            <td>${conta.data_vencimento ? new Date(conta.data_vencimento).toLocaleDateString('pt-BR') : ''}</td>
-                            <td>R$ ${parseFloat(conta.Valor_previsto || 0).toFixed(2).replace('.', ',')}</td>
-                            <td>${conta.situacao || ''}</td>
-                            <td>${conta.tipo || ''}</td>
-                            <td>${conta.conta_corrente || ''}</td>
-                            <td>${conta.plano_contas || ''}</td>
-                            <td>${conta.repeticao || ''}</td>
-                            <td>${conta.forma_pagamento || ''}</td>
-                            <td>R$ ${parseFloat(conta.juros_multa || 0).toFixed(2).replace('.', ',')}</td>
-                            <td>R$ ${parseFloat(conta.desconto || 0).toFixed(2).replace('.', ',')}</td>
-                            <td>${conta.data_liquidacao ? new Date(conta.data_liquidacao).toLocaleDateString('pt-BR') : ''}</td>
-                            <td>R$ ${parseFloat(conta.total_pago || 0).toFixed(2).replace('.', ',')}</td>
-                        </tr>
-                        <tr class="descricao-expandida-row" data-conta-id="${conta.id}" style="display: none;">
-                            <td colspan="13" class="text-muted">
-                                <strong>Descrição:</strong> ${conta.descricao || 'Nenhuma descrição fornecida.'}
-                            </td>
-                        </tr>
-                    `;
-                    tbody.insertAdjacentHTML('beforeend', row);
-                });
-
-                // Adicionar evento de clique APÓS as linhas serem inseridas no DOM
-                document.querySelectorAll('.conta-row').forEach(row => {
-                    row.addEventListener('click', function() {
-                        const contaId = this.dataset.contaId;
-                        // Use a nova classe para evitar conflitos se houver outras 'descricao-row'
-                        const descricaoRow = document.querySelector(`.descricao-expandida-row[data-conta-id="${contaId}"]`);
-                        if (descricaoRow) {
-                            descricaoRow.style.display = descricaoRow.style.display === 'none' ? 'table-row' : 'none';
+                fetch('listar_contas.php')
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error('Erro na requisição: ' + res.statusText);
                         }
+                        return res.json();
+                    })
+                    .then(contas => {
+                        const tbody = document.getElementById('lista-contas-tbody');
+                        tbody.innerHTML = '';
+
+                        if (contas.length === 0) {
+                            tbody.innerHTML = '<tr><td colspan="13">Nenhum pagamento registrado.</td></tr>';
+                        } else {
+                            contas.forEach(conta => {
+                                const row = `
+                                    <tr class="conta-row" data-conta-id="${conta.id}">
+                                        <td>${conta.fornecedor || ''}</td>
+                                        <td>${conta.documento_nf || ''}</td>
+                                        <td>${conta.data_vencimento ? new Date(conta.data_vencimento).toLocaleDateString('pt-BR') : ''}</td>
+                                        <td>R$ ${parseFloat(conta.Valor_previsto || 0).toFixed(2).replace('.', ',')}</td>
+                                        <td>${conta.situacao || ''}</td>
+                                        <td>${conta.tipo || ''}</td>
+                                        <td>${conta.conta_corrente || ''}</td>
+                                        <td>${conta.plano_contas || ''}</td>
+                                        <td>${conta.repeticao || ''}</td>
+                                        <td>${conta.forma_pagamento || ''}</td>
+                                        <td>R$ ${parseFloat(conta.juros_multa || 0).toFixed(2).replace('.', ',')}</td>
+                                        <td>R$ ${parseFloat(conta.desconto || 0).toFixed(2).replace('.', ',')}</td>
+                                        <td>${conta.data_liquidacao ? new Date(conta.data_liquidacao).toLocaleDateString('pt-BR') : ''}</td>
+                                        <td>R$ ${parseFloat(conta.total_pago || 0).toFixed(2).replace('.', ',')}</td>
+                                    </tr>
+                                    <tr class="descricao-expandida-row" data-conta-id="${conta.id}" style="display: none;">
+                                        <td colspan="13" class="text-muted">
+                                            <strong>Descrição:</strong> ${conta.descricao || 'Nenhuma descrição fornecida.'}
+                                        </td>
+                                    </tr>
+                                `;
+                                tbody.insertAdjacentHTML('beforeend', row);
+                            });
+
+                            document.querySelectorAll('.conta-row').forEach(row => {
+                                row.addEventListener('click', function() {
+                                    const contaId = this.dataset.contaId;
+                                    const descricaoRow = document.querySelector(`.descricao-expandida-row[data-conta-id="${contaId}"]`);
+                                    if (descricaoRow) {
+                                        descricaoRow.style.display = descricaoRow.style.display === 'none' ? 'table-row' : 'none';
+                                    }
+                                });
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        document.getElementById('lista-contas-tbody').innerHTML = '<tr><td colspan="13">Erro ao carregar contas: ' + error.message + '</td></tr>';
+                        console.error('Erro ao carregar contas:', error);
                     });
-                });
             }
-        })
-        .catch(error => {
-            document.getElementById('lista-contas-tbody').innerHTML = '<tr><td colspan="13">Erro ao carregar contas: ' + error.message + '</td></tr>';
-            console.error('Erro ao carregar contas:', error);
-        });
-}
-            
 
             // -------------------------------------------------------------
-            // Event Listeners para o Menu de Navegação (dropdowns)
+            // Event Listeners para o Menu de Navegação (dropdowns e itens simples)
             // -------------------------------------------------------------
+
+            // Lógica para Operacional
+            document.getElementById('nav-operacional').addEventListener('click', function (e) {
+                e.preventDefault();
+                esconderTodasAsSecoes();
+                document.getElementById('operacional').style.display = 'block';
+                // Renderizar o calendário novamente garante que ele ajuste seu layout
+                // se a div estava oculta.
+                if (calendar) {
+                    calendar.render();
+                    calendar.updateSize(); // Garante que o calendário se ajuste ao tamanho da div
+                } else {
+                    initializeCalendar(); // Inicializa se ainda não foi feito
+                }
+            });
 
             // Lógica para Clientes -> Listar
             document.querySelectorAll('.dropdown-item[href="#clientes"]').forEach(link => {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
                     esconderTodasAsSecoes();
+                    document.getElementById('clientes').style.display = 'block';
                     fetch('listar_clientes.php')
                         .then(response => response.text())
                         .then(data => {
                             document.getElementById('lista-clientes').innerHTML = data;
-                            document.getElementById('clientes').style.display = "block";
-                            document.getElementById('btnNovoCliente').style.display = "inline-block"; // Ajustado para aparecer aqui
-                            document.getElementById('clientes').scrollIntoView({ behavior: 'smooth' });
                         })
-                        .catch(error => {
-                            document.getElementById('lista-clientes').innerHTML = '<tr><td colspan="6">Erro ao carregar os dados.</td></tr>';
-                            console.error('Erro ao carregar clientes:', error);
-                        });
+                        .catch(error => console.error('Erro ao carregar clientes:', error));
                 });
             });
 
             // Lógica para Clientes -> Novo
-            document.querySelector('.dropdown-item[href="#cadastro-cliente"]').addEventListener('click', function (e) {
-                e.preventDefault();
-                esconderTodasAsSecoes();
-                document.getElementById('cadastro-cliente').style.display = "block";
-                document.getElementById('cadastro-cliente').scrollIntoView({ behavior: 'smooth' });
-                document.getElementById('btnNovoCliente').style.display = "none";
-            });
-
-            // Lógica para Financeiro -> Contas (formulário de Nova Conta)
-            document.querySelectorAll('.dropdown-item').forEach(link => {
-                if (link.textContent.trim() === 'Contas') {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        esconderTodasAsSecoes();
-                        document.getElementById('cadastro-conta-pagar').style.display = "block"; // ID corrigido aqui
-                        document.getElementById('cadastro-conta-pagar').scrollIntoView({ behavior: 'smooth' });
-                    });
-                }
-                // Lógica para Financeiro -> Listar Pagamentos (tabela de contas)
-                if (link.textContent.trim() === 'Listar Pagamentos') {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        esconderTodasAsSecoes();
-                        document.getElementById('listar-pagamentos-secao').style.display = "block";
-                        document.getElementById('listar-pagamentos-secao').scrollIntoView({ behavior: 'smooth' });
-                        carregarEExibirContas(); // Carrega a lista de contas aqui
-                    });
-                }
-            });
-            const btnNovo = document.getElementById("btnNovoCliente");
-            const formCliente = document.getElementById("cadastro-cliente");
-            const btnCancelar = document.getElementById("btnCancelar");
-
-            if (btnNovo) {
-                btnNovo.addEventListener("click", () => {
+            document.querySelectorAll('.dropdown-item[href="#cadastro-cliente"]').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
                     esconderTodasAsSecoes();
-                    formCliente.style.display = "block";
-                    btnNovo.style.display = "none";
-                    formCliente.scrollIntoView({ behavior: "smooth" });
+                    document.getElementById('cadastro-cliente').style.display = 'block';
                 });
-            }
+            });
 
-            if (btnCancelar) {
-                btnCancelar.addEventListener("click", () => {
-                    formCliente.style.display = "none";
-                    document.getElementById('clientes').style.display = "block";
-                    btnNovo.style.display = "inline-block";
+            // Lógica para Financeiro -> Contas (Cadastro de Conta a Pagar)
+            document.querySelectorAll('.dropdown-item[href="#cadastro-conta-pagar"]').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    esconderTodasAsSecoes();
+                    document.getElementById('cadastro-conta-pagar').style.display = 'block';
                 });
-            }
+            });
 
+            // Lógica para Financeiro -> Listar Pagamentos
+            document.querySelectorAll('.dropdown-item[href="#listar-pagamentos-secao"]').forEach(link => {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    esconderTodasAsSecoes();
+                    document.getElementById('listar-pagamentos-secao').style.display = 'block';
+                    carregarEExibirContas();
+                });
+            });
+
+            // Lógica para o botão "Novo Registro" na seção de Clientes
+            document.getElementById('btnNovoCliente').addEventListener('click', function () {
+                esconderTodasAsSecoes();
+                document.getElementById('cadastro-cliente').style.display = 'block';
+            });
+
+            // Lógica para o botão "Cancelar" no cadastro de Cliente
+            document.getElementById('btnCancelar').addEventListener('click', function () {
+                esconderTodasAsSecoes();
+                document.getElementById('clientes').style.display = 'block';
+            });
+
+            // No carregamento inicial da página, exibir a seção operacional e inicializar o calendário
             esconderTodasAsSecoes();
-
+            document.getElementById('operacional').style.display = 'block';
+            initializeCalendar();
         });
-document.addEventListener("DOMContentLoaded", function () {
-    const rows = document.querySelectorAll(".clickable-row");
-
-    rows.forEach((row) => {
-        row.addEventListener("click", () => {
-            const nextRow = row.nextElementSibling;
-            const descricao = row.getAttribute("data-descricao");
-
-            // Alterna visibilidade
-            if (nextRow.style.display === "none") {
-                nextRow.querySelector("td").textContent = descricao;
-                nextRow.style.display = "table-row";
-            } else {
-                nextRow.style.display = "none";
-            }
-        });
-    });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-    const linhas = document.querySelectorAll(".linha-pagamento");
-
-    linhas.forEach((linha) => {
-        linha.addEventListener("click", () => {
-            const linhaDescricao = linha.nextElementSibling;
-            const descricao = linha.dataset.descricao;
-
-            if (linhaDescricao.style.display === "none" || linhaDescricao.style.display === "") {
-                linhaDescricao.querySelector("td").textContent = descricao;
-                linhaDescricao.style.display = "table-row";
-            } else {
-                linhaDescricao.style.display = "none";
-            }
-        });
-    });
-});
     </script>
 </body>
 </html>
