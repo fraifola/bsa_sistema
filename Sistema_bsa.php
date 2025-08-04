@@ -879,6 +879,45 @@
 
         // ... (mantenha o restante dos seus event listeners de navegação)
     });
+    
+  // --- Configuração inicial ao carregar a página ---
+  document.addEventListener('DOMContentLoaded', function() {
+    hideAllSections(); // Oculta todas as seções inicialmente
+    // Ao invés de ficar tudo branco, vamos mostrar uma seção padrão:
+    operacionalCalendarSection.style.display = 'block'; // Mostra o calendário operacional por padrão
+    // Certifique-se de que o calendário é renderizado na primeira vez que aparece
+    if (!document.getElementById('calendar').hasAttribute('data-fullcalendar-initialized')) {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'pt-br',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        editable: true,
+        eventDrop: function(info) {
+          const eventId = info.event.id;
+          const newStart = info.event.start.toISOString();
+          const newEnd = info.event.end ? info.event.end.toISOString() : null;
+          console.log(`Evento "${info.event.title}" (ID: ${eventId}) movido para: ${newStart}`);
+          if (newEnd) {
+            console.log(`Nova data de término: ${newEnd}`);
+          }
+        },
+        events: [
+          { id: 'event1', title: 'Tarefa A - Cliente X', start: '2025-07-28' },
+          { id: 'event2', title: 'Instalação Y', start: '2025-07-30T10:00:00', end: '2025-07-30T12:00:00', color: '#007bff' },
+          { id: 'event3', title: 'Visita de Manutenção', start: '2025-08-05', color: '#28a745' }
+        ],
+      });
+      calendar.render();
+      document.getElementById('calendar').setAttribute('data-fullcalendar-initialized', 'true');
+    }
+  });
+
+
 </script>
 </body>
 </html>
