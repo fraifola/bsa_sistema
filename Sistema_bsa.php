@@ -186,6 +186,8 @@
                             <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
                             <li><a class="dropdown-item" href="#cadastro-conta-pagar">Contas</a></li>
                             <li><a class="dropdown-item" href="#listar-pagamentos-secao">Listar Pagamentos</a></li>
+                            <li><a class="dropdown-item" href="#">Chave Pix</a></li>
+                            <li><a class="dropdown-item" href="#">Forma de Pagamento</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown mx-2">
@@ -199,19 +201,35 @@
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Impressões</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Consultar OS</a></li>
-                            <li><a class="dropdown-item" href="#">OS por tipo de Pagamento</a></li>
-                            <li><a class="dropdown-item" href="#">Estatística</a></li>
+                            <li><a class="dropdown-item" href="#">Clientes</a></li>
+                            <li><a class="dropdown-item" href="#">Serviços</a></li>
+                            <li><a class="dropdown-item" href="#">Produtos</a></li>
+                            <li><a class="dropdown-item" href="#">Pragas</a></li>
+                            <li><a class="dropdown-item" href="#">Equipamentos</a></li>
+                            <li><a class="dropdown-item" href="#">Estoque de Produtos</a></li>
+                            <li><a class="dropdown-item" href="#">Histórico de Serviços do Cliente</a></li>
+                            <li><a class="dropdown-item" href="#">Roteiro do técnico</a></li>
                         </ul>
                     </li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Arquivos</a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Consultar OS</a></li>
-                            <li><a class="dropdown-item" href="#">OS por tipo de Pagamento</a></li>
-                            <li><a class="dropdown-item" href="#">Estatística</a></li>
+                            <li><a class="dropdown-item" href="#">Uploud de Documentos</a></li>
+                            <li><a class="dropdown-item" href="#">Boleto/Nota Fiscal</a></li>
+                            <li><a class="dropdown-item" href="#">Documentos de Funcionarios</a></li>
+                            <li><a class="dropdown-item" href="#">Contrato de Prestação de Serviço</a></li>
+                            <li><a class="dropdown-item" href="#">Arquivos de Produtos</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item dropdown mx-2">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Configurações</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#">Dados da Empresa</a></li>
+                            <li><a class="dropdown-item" href="#">Usuário</a></li>
+                            <li><a class="dropdown-item" href="#">Departamento</a></li>
+                            <li><a class="dropdown-item" href="#">Assinatura do Técnico</a></li>
+                            <li><a class="dropdown-item" href="#">Frota de Veículos</a></li>
+                        </ul>
                 </ul>
             </div>
         </div>
