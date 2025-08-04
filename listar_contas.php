@@ -1,65 +1,75 @@
 <?php
-// Ativar exibição de erros para depuração (REMOVA EM PRODUÇÃO!)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// listar_contas.php
 
-// Configurações do banco de dados
+// Configurações
+header('Content-Type: application/json');
+ini_set('display_errors', 0); // Desative em produção
+
+// Credenciais do banco (substitua pelas suas)
 $host = "localhost";
 $usuario = "root";
 $senha = "";
-$banco = "bsa"; // Certifique-se de que este é o banco correto
+$banco = "bsa";
 
-// Conexão com o banco de dados
-$conn = new mysqli($host, $usuario, $senha, $banco);
+try {
+    // Conexão com o banco
+    $conn = new mysqli($host, $usuario, $senha, $banco);
+    
+    if ($conn->connect_error) {
+        throw new Exception("Erro de conexão: " . $conn->connect_error);
+    }
 
-// Verifica a conexão e envia erro JSON se falhar
-if ($conn->connect_error) {
-    http_response_code(500); // Define o status HTTP para erro interno do servidor
-    header('Content-Type: application/json'); // Informa que a resposta é JSON
-    echo json_encode(["error" => "Falha na conexão com o banco de dados: " . $conn->connect_error]);
-    exit(); // Encerra o script para evitar mais processamento e saída indesejada
-}
+    // Consulta SQL
+    $sql = "SELECT
+                data_emissao,
+                fornecedor,
+                funcionario,
+                documento_nf,
+                data_vencimento,
+                subtotal,
+                subcategoria,
+                situacao,
+                tipo,
+                conta_corrente,
+                plano_contas,
+                descricao,
+                repeticao,
+                juros_multa,
+                desconto,
+                forma_pagamento,
+                data_liquidacao,
+                total_pago
+            FROM contas_pagar
+            ORDER BY data_vencimento DESC";
 
-// Prepara a consulta SQL para selecionar todas as contas
-$sql = "SELECT
-            data_emissao,
-            fornecedor,
-            documento_nf,
-            data_vencimento,
-            subtotal,
-            situacao,
-            tipo,
-            conta_corrente,
-            plano_contas,
-            descricao,
-            repeticao,
-            juros_multa,
-            desconto,
-            forma_pagamento,
-            data_liquidacao,
-            total_pago
-        FROM contas_pagar
-        ORDER BY id DESC";
+    $result = $conn->query($sql);
+    
+    if (!$result) {
+        throw new Exception("Erro na consulta: " . $conn->error);
+    }
 
-$result = $conn->query($sql);
-
-$contas = array();
-if ($result->num_rows > 0) {
-    // Itera sobre os resultados e adiciona cada linha ao array de contas
-    while($row = $result->fetch_assoc()) {
-        // O JavaScript vai formatar os valores monetários e de data,
-        // então enviamos os dados brutos aqui.
+    // Processar resultados
+    $contas = [];
+    while ($row = $result->fetch_assoc()) {
         $contas[] = $row;
     }
+
+    // Retornar JSON
+    echo json_encode([
+        'success' => true,
+        'data' => $contas,
+        'count' => count($contas)
+    ]);
+
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
+} finally {
+    if (isset($conn)) {
+        $conn->close();
+    }
 }
-
-// Define o cabeçalho para indicar que a resposta é JSON
-header('Content-Type: application/json');
-
-// Codifica o array de contas para JSON e o imprime
-echo json_encode($contas);
-
-// Fecha a conexão com o banco de dados
-$conn->close();
 ?>

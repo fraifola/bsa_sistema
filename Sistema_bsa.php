@@ -148,6 +148,31 @@
         .modal-body .form-group {
             margin-bottom: 1rem;
         }
+        /* Adicione no seu <style> ou arquivo CSS */
+        #listar-pagamentos-secao {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        #tabelaContasPagar {
+            white-space: nowrap;
+            min-width: 100%;
+        }
+
+        #tabelaContasPagar th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+        }
+
+        #tabelaContasPagar td {
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .text-end {
+            text-align: right !important;
+        }
     </style>
 </head>
 <body>
@@ -180,16 +205,16 @@
                             <li><a class="dropdown-item" href="#">Estoque</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown mx-2">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Financeiro</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
-                            <li><a class="dropdown-item" href="#cadastro-conta-pagar">Contas</a></li>
-                            <li><a class="dropdown-item" href="#listar-pagamentos-secao">Listar Pagamentos</a></li>
-                            <li><a class="dropdown-item" href="#">Chave Pix</a></li>
-                            <li><a class="dropdown-item" href="#">Forma de Pagamento</a></li>
-                        </ul>
-                    </li>
+                                <li class="nav-item dropdown mx-2">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Financeiro</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
+                    <li><a class="dropdown-item" href="#cadastro-conta-pagar">Contas</a></li>
+                    <li><a class="dropdown-item" href="#listar-pagamentos-secao">Listar Pagamentos</a></li>
+                    <li><a class="dropdown-item" href="#">Chave Pix</a></li>
+                    <li><a class="dropdown-item" href="#">Forma de Pagamento</a></li>
+                </ul>
+            </li>
                     <li class="nav-item dropdown mx-2">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Relatórios</a>
                         <ul class="dropdown-menu">
@@ -626,10 +651,7 @@
     var editarOsModal;
 
     document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        editarOsModal = new bootstrap.Modal(document.getElementById('editarOsModal'));
-
-        // Declarações de variáveis
+        // Elementos das seções
         const navOperacional = document.getElementById('nav-operacional');
         const operacionalSection = document.getElementById('operacional');
         const clientesSection = document.getElementById('clientes');
@@ -637,95 +659,126 @@
         const cadastroContaPagarSection = document.getElementById('cadastro-conta-pagar');
         const listarPagamentosSecao = document.getElementById('listar-pagamentos-secao');
 
-        // ============ FUNÇÃO PRINCIPAL PARA SALVAR OS ============
-        document.getElementById('btnSalvarOS').addEventListener('click', function(e) {
-            e.preventDefault(); // Impede o envio tradicional do formulário
-            
-            const btn = this;
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Salvando...';
+        // Inicializar calendário e modal
+        var calendarEl = document.getElementById('calendar');
+        editarOsModal = new bootstrap.Modal(document.getElementById('editarOsModal'));
+        
+        // Mostrar apenas a seção operacional inicialmente
+        hideAllSections();
+        operacionalSection.style.display = 'block';
+        
+        // Inicializar calendário
+        initializeCalendar();
 
-            // Coletando os valores dos campos do formulário
-            const tipo_cliente = document.getElementById('tipo_cliente').value;
-            const cliente_nome = document.getElementById('tipo_cliente').options[document.getElementById('tipo_cliente').selectedIndex].text;
-            const servico = document.getElementById('os_servico').value;
-            const dataInicio = document.getElementById('os_data_inicio').value;
-            const horaInicio = document.getElementById('os_hora_inicio').value;
-            const horaFim = document.getElementById('os_hora_fim').value;
-            const observacoes = document.getElementById('os_observacoes').value;
+        // ============ NAVEGAÇÃO ENTRE SEÇÕES ============
+        navOperacional.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideAllSections();
+            operacionalSection.style.display = 'block';
+        });
 
-            // Validação de campos obrigatórios
-            if (!tipo_cliente || !servico || !dataInicio || !horaInicio) {
-                alert('Por favor, preencha Cliente, Serviço, Data de Início e Hora de Início.');
-                btn.disabled = false;
-                btn.innerHTML = 'Salvar OS';
-                return;
-            }
-
-            // Criando FormData para envio
-            const formData = new FormData();
-            formData.append('tipo_cliente', tipo_cliente);
-            formData.append('servico', servico);
-            formData.append('data_inicio', dataInicio);
-            formData.append('hora_inicio', horaInicio);
-            formData.append('hora_fim', horaFim);
-            formData.append('observacoes', observacoes);
-
-            // Requisição fetch para salvar a OS
-            fetch('salvar_os.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text) });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('Ordem de Serviço salva com sucesso!');
-                    calendar.refetchEvents();
-                    document.getElementById('formOS').reset();
-                } else {
-                    alert('Erro ao salvar: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao salvar: ' + error.message);
-            })
-            .finally(() => {
-                btn.disabled = false;
-                btn.innerHTML = 'Salvar OS';
+        // Listener para o dropdown de Clientes
+        document.querySelectorAll('.dropdown-item[href="#clientes"]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideAllSections();
+                clientesSection.style.display = 'block';
+                carregarClientesDropdown();
             });
         });
 
-        // ============ RESTANTE DO SEU CÓDIGO (mantido igual) ============
-        function carregarClientesDropdown() {
-            fetch('get_clientes.php')
-                .then(response => response.json())
-                .then(clientes => {
-                    const selectCliente = document.getElementById('tipo_cliente');
-                    selectCliente.innerHTML = '<option value="">Selecione o Cliente</option>';
-                    if (clientes.length > 0) {
-                        clientes.forEach(cliente => {
-                            const option = document.createElement('option');
-                            option.value = cliente.id;
-                            option.textContent = cliente.nome;
-                            selectCliente.appendChild(option);
-                        });
-                    } else {
-                        selectCliente.innerHTML = '<option value="">Nenhum cliente cadastrado</option>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Erro ao carregar clientes:', error);
-                    document.getElementById('tipo_cliente').innerHTML = '<option value="">Erro ao carregar clientes</option>';
-                });
+        // Listener para o dropdown de Cadastro de Cliente
+        document.querySelectorAll('.dropdown-item[href="#cadastro-cliente"]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideAllSections();
+                cadastroClienteSection.style.display = 'block';
+            });
+        });
+
+        // Listener para o dropdown de Contas a Pagar
+        document.querySelectorAll('.dropdown-item[href="#cadastro-conta-pagar"]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideAllSections();
+                cadastroContaPagarSection.style.display = 'block';
+            });
+        });
+
+        // Listener para o dropdown de Listar Pagamentos
+        document.querySelectorAll('.dropdown-item[href="#listar-pagamentos-secao"]').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                hideAllSections();
+                listarPagamentosSecao.style.display = 'block';
+                carregarContas();
+            });
+        });
+
+        // ============ FUNÇÕES AUXILIARES ============
+        function hideAllSections() {
+            operacionalSection.style.display = 'none';
+            clientesSection.style.display = 'none';
+            cadastroClienteSection.style.display = 'none';
+            cadastroContaPagarSection.style.display = 'none';
+            listarPagamentosSecao.style.display = 'none';
         }
 
-        carregarClientesDropdown();
+        function initializeCalendar() {
+            calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: 'pt-br',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: 'listar_os_calendario.php',
+                editable: true,
+                eventStartEditable: true,
+                eventDurationEditable: true,
+                eventDrop: function(info) {
+                    updateEventOnServer(info.event);
+                },
+                eventResize: function(info) {
+                    updateEventOnServer(info.event);
+                },
+                eventClick: function(info) {
+                    showEditModal(info.event);
+                }
+            });
+            calendar.render();
+        }
+
+        function updateEventOnServer(event) {
+            const newStart = event.start.toISOString().slice(0, 19).replace('T', ' ');
+            let newEnd = event.end ? event.end.toISOString().slice(0, 19).replace('T', ' ') : null;
+            
+            const formData = new FormData();
+            formData.append('id', event.id);
+            formData.append('data_inicio', newStart.split(' ')[0]);
+            formData.append('hora_inicio', newStart.split(' ')[1].substring(0, 5));
+            formData.append('hora_fim', newEnd ? newEnd.split(' ')[1].substring(0, 5) : '');
+            
+            fetch('atualizar_os.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(handleResponse)
+            .catch(handleError);
+        }
+
+        function showEditModal(event) {
+            document.getElementById('edit_os_id').value = event.id;
+            document.getElementById('edit_tipo_cliente').value = event.extendedProps.cliente_nome || '';
+            document.getElementById('edit_os_servico').value = event.extendedProps.servico || '';
+            document.getElementById('edit_os_data_inicio').value = event.start.toISOString().split('T')[0];
+            document.getElementById('edit_os_hora_inicio').value = formatTimeForInput(event.start);
+            document.getElementById('edit_os_hora_fim').value = formatTimeForInput(event.end);
+            document.getElementById('edit_os_observacoes').value = event.extendedProps.description || '';
+            
+            editarOsModal.show();
+        }
 
         function formatTimeForInput(date) {
             if (!date) return '';
@@ -734,190 +787,103 @@
             return `${hours}:${minutes}`;
         }
 
-        calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'pt-br',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            },
-            events: 'listar_os_calendario.php',
-            editable: true,
-            eventStartEditable: true,
-            eventDurationEditable: true,
-            eventDrop: function(info) {
-                const event = info.event;
-                const newStart = event.start.toISOString().slice(0, 19).replace('T', ' ');
-                let newEnd = null;
-                if (event.end) {
-                    newEnd = event.end.toISOString().slice(0, 19).replace('T', ' ');
-                }
-                const newDate = newStart.split(' ')[0];
-                const newTimeStart = newStart.split(' ')[1].substring(0, 5);
-                let newTimeEnd = newEnd ? newEnd.split(' ')[1].substring(0, 5) : '';
-
-                updateOSOnServer(
-                    event.id,
-                    event.extendedProps.tipo_cliente,
-                    event.extendedProps.servico,
-                    newDate,
-                    newTimeStart,
-                    newTimeEnd,
-                    event.extendedProps.description
-                );
-            },
-            eventResize: function(info) {
-                const event = info.event;
-                const newStart = event.start.toISOString().slice(0, 19).replace('T', ' ');
-                let newEnd = null;
-                if (event.end) {
-                    newEnd = event.end.toISOString().slice(0, 19).replace('T', ' ');
-                }
-                const newDate = newStart.split(' ')[0];
-                const newTimeStart = newStart.split(' ')[1].substring(0, 5);
-                let newTimeEnd = newEnd ? newEnd.split(' ')[1].substring(0, 5) : '';
-                updateOSOnServer(
-                    event.id,
-                    event.extendedProps.tipo_cliente,
-                    event.extendedProps.servico,
-                    newDate,
-                    newTimeStart,
-                    newTimeEnd,
-                    event.extendedProps.description
-                );
-            },
-            eventClick: function(info) {
-                const event = info.event;
-                document.getElementById('edit_os_id').value = event.id;
-                document.getElementById('edit_tipo_cliente').value = event.extendedProps.cliente_nome || '';
-                document.getElementById('edit_os_servico').value = event.extendedProps.servico || '';
-                
-                document.getElementById('edit_os_data_inicio').value = event.start.toISOString().split('T')[0];
-                document.getElementById('edit_os_hora_inicio').value = formatTimeForInput(event.start);
-                document.getElementById('edit_os_hora_fim').value = formatTimeForInput(event.end);
-                
-                document.getElementById('edit_os_observacoes').value = event.extendedProps.description || '';
-
-                editarOsModal.show();
-            }
-        });
-        calendar.render();
-
-        function updateOSOnServer(id, tipo_cliente, servico, dataInicio, horaInicio, horaFim, observacoes) {
-            const formData = new FormData();
-            formData.append('id', id);
-            formData.append('tipo_cliente', tipo_cliente);
-            formData.append('servico', servico);
-            formData.append('data_inicio', dataInicio);
-            formData.append('hora_inicio', horaInicio);
-            formData.append('hora_fim', horaFim);
-            formData.append('observacoes', observacoes);
-            fetch('atualizar_os.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text) });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    console.log('OS atualizada com sucesso!');
-                } else {
-                    alert('Erro ao atualizar: ' + data.message);
-                    calendar.refetchEvents();
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao atualizar: ' + error.message);
-                calendar.refetchEvents();
-            });
+        // ============ FUNÇÕES DE CARREGAMENTO DE DADOS ============
+        function carregarClientesDropdown() {
+            fetch('get_clientes.php')
+                .then(response => response.json())
+                .then(clientes => {
+                    const selects = document.querySelectorAll('#tipo_cliente, #edit_tipo_cliente');
+                    
+                    selects.forEach(select => {
+                        select.innerHTML = '<option value="">Selecione o Cliente</option>';
+                        if (clientes.length > 0) {
+                            clientes.forEach(cliente => {
+                                const option = document.createElement('option');
+                                option.value = cliente.id;
+                                option.textContent = cliente.nome;
+                                select.appendChild(option);
+                            });
+                        }
+                    });
+                })
+                .catch(handleError);
         }
 
-        document.getElementById('btnAtualizarOS').addEventListener('click', function() {
-            const id = document.getElementById('edit_os_id').value;
-            const tipo_cliente = document.getElementById('edit_tipo_cliente').value;
-            const servico = document.getElementById('edit_os_servico').value;
-            const dataInicio = document.getElementById('edit_os_data_inicio').value;
-            const horaInicio = document.getElementById('edit_os_hora_inicio').value;
-            const horaFim = document.getElementById('edit_os_hora_fim').value;
-            const observacoes = document.getElementById('edit_os_observacoes').value;
+        function carregarContas() {
+    fetch('listar_contas.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Erro na rede');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (!data.success) {
+                throw new Error(data.error || 'Erro no servidor');
+            }
             
-            updateOSOnServer(id, tipo_cliente, servico, dataInicio, horaInicio, horaFim, observacoes);
-            editarOsModal.hide();
+            const tabela = document.getElementById('corpoTabelaContas');
+            tabela.innerHTML = '';
+            
+            data.data.forEach(conta => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${formatarData(conta.data_emissao)}</td>
+                    <td>${conta.fornecedor || ''}</td>
+                    <td>${conta.documento_nf || ''}</td>
+                    <td>${formatarData(conta.data_vencimento)}</td>
+                    <td class="text-end">R$ ${formatarMoeda(conta.subtotal)}</td>
+                    <td>${conta.situacao || ''}</td>
+                    <td>${conta.tipo || ''}</td>
+                    <td>${conta.conta_corrente || ''}</td>
+                    <td>${conta.plano_contas || ''}</td>
+                    <td>${conta.descricao || ''}</td>
+                    <td>${conta.repeticao || ''}</td>
+                    <td class="text-end">R$ ${formatarMoeda(conta.juros_multa)}</td>
+                    <td class="text-end">R$ ${formatarMoeda(conta.desconto)}</td>
+                    <td>${conta.forma_pagamento || ''}</td>
+                    <td>${formatarData(conta.data_liquidacao)}</td>
+                    <td class="text-end">R$ ${formatarMoeda(conta.total_pago)}</td>
+                `;
+                tabela.appendChild(row);
+            });
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Falha ao carregar contas: ' + error.message);
         });
+}
 
-        // ============ NAVEGAÇÃO ENTRO SESSÕES ============
-        operacionalSection.style.display = 'block';
-        clientesSection.style.display = 'none';
-        cadastroClienteSection.style.display = 'none';
-        cadastroContaPagarSection.style.display = 'none';
-        listarPagamentosSecao.style.display = 'none';
+// Funções auxiliares para formatação
+function formatarData(data) {
+    if (!data) return '';
+    const date = new Date(data);
+    return date.toLocaleDateString('pt-BR');
+}
 
-        navOperacional.addEventListener('click', function(e) {
-            e.preventDefault();
-            operacionalSection.style.display = 'block';
-            clientesSection.style.display = 'none';
-            cadastroClienteSection.style.display = 'none';
-            cadastroContaPagarSection.style.display = 'none';
-            listarPagamentosSecao.style.display = 'none';
-        });
-
-        document.querySelector('a[href="#clientes"]').addEventListener('click', function(e) {
-            e.preventDefault();
-            operacionalSection.style.display = 'none';
-            clientesSection.style.display = 'block';
-            cadastroClienteSection.style.display = 'none';
-            cadastroContaPagarSection.style.display = 'none';
-            listarPagamentosSecao.style.display = 'none';
-            carregarClientes();
-        });
-
-        // ... (mantenha o restante dos seus event listeners de navegação)
+function formatarMoeda(valor) {
+    return parseFloat(valor || 0).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
-    
-  // --- Configuração inicial ao carregar a página ---
-  document.addEventListener('DOMContentLoaded', function() {
-    hideAllSections(); // Oculta todas as seções inicialmente
-    // Ao invés de ficar tudo branco, vamos mostrar uma seção padrão:
-    operacionalCalendarSection.style.display = 'block'; // Mostra o calendário operacional por padrão
-    // Certifique-se de que o calendário é renderizado na primeira vez que aparece
-    if (!document.getElementById('calendar').hasAttribute('data-fullcalendar-initialized')) {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'pt-br',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        editable: true,
-        eventDrop: function(info) {
-          const eventId = info.event.id;
-          const newStart = info.event.start.toISOString();
-          const newEnd = info.event.end ? info.event.end.toISOString() : null;
-          console.log(`Evento "${info.event.title}" (ID: ${eventId}) movido para: ${newStart}`);
-          if (newEnd) {
-            console.log(`Nova data de término: ${newEnd}`);
-          }
-        },
-        events: [
-          { id: 'event1', title: 'Tarefa A - Cliente X', start: '2025-07-28' },
-          { id: 'event2', title: 'Instalação Y', start: '2025-07-30T10:00:00', end: '2025-07-30T12:00:00', color: '#007bff' },
-          { id: 'event3', title: 'Visita de Manutenção', start: '2025-08-05', color: '#28a745' }
-        ],
-      });
-      calendar.render();
-      document.getElementById('calendar').setAttribute('data-fullcalendar-initialized', 'true');
-    }
-  });
+}
 
+        // ============ HANDLERS GENÉRICOS ============
+        function handleResponse(response) {
+            if (!response.ok) {
+                return response.text().then(text => { throw new Error(text) });
+            }
+            return response.json();
+        }
 
+        function handleError(error) {
+            console.error('Erro:', error);
+            alert('Ocorreu um erro: ' + error.message);
+        }
+
+        // ============ INICIALIZAÇÕES ============
+        carregarClientesDropdown();
+    });
 </script>
 </body>
 </html>
