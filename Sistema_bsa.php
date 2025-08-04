@@ -880,7 +880,66 @@
         // ... (mantenha o restante dos seus event listeners de navegação)
     });
     
-  // --- Configuração inicial ao carregar a página ---
+  document.getElementById('form-cadastro-servico').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    const dadosServico = {
+      tipo: document.getElementById('servicoTipo').value,
+      cliente: document.getElementById('servicoCliente').value,
+      fantasia: document.getElementById('servicoFantasia').value,
+      endereco: document.getElementById('servicoEndereco').value,
+      telefone: document.getElementById('servicoTelefone').value,
+      contato: document.getElementById('servicoContato').value,
+      atividadeComercial: document.getElementById('servicoAtividadeComercial').value,
+      cep: document.getElementById('servicoCep').value,
+      vendedor: document.getElementById('servicoVendedor').value,
+      emailCliente: document.getElementById('servicoEmailCliente').value,
+      qtdeDeptIscas: document.getElementById('servicoQtdeDeptIscas').value,
+      observacoes: document.getElementById('servicoObservacoes').value,
+      locaisTratamento: document.getElementById('servicoLocaisTratamento').value,
+      servicoExecutado: document.getElementById('servicoExecutado').value,
+      pragasCombatidas: document.getElementById('servicoPragasCombatidas').value,
+      detalhamento: document.getElementById('servicoDetalhamento').value,
+      executores: document.getElementById('servicoExecutores').value,
+      formaPagamento: document.getElementById('servicoFormaPagamento').value,
+      produtosUtilizados: document.getElementById('servicoProdutosUtilizados').value
+    };
+
+    fetch('salvar_servico.php', { // You'll need to create this PHP file
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dadosServico)
+    })
+    .then(response => response.text())
+    .then(result => {
+      alert(result); // In a real app, use a more user-friendly notification
+      // Optionally, clear the form or redirect after saving
+      this.reset(); // Clear the form fields
+      hideAllSections();
+      operacionalCalendarSection.style.display = 'block'; // Go back to calendar
+      operacionalCalendarSection.scrollIntoView({ behavior: 'smooth' });
+    })
+    .catch(error => {
+      console.error('Erro ao salvar o serviço:', error);
+      alert('Erro ao salvar o serviço.');
+    });
+  });
+
+
+  // --- Function to load accounts list ---
+  function carregarContas() {
+    fetch('listar_contas.php')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('lista-contas').innerHTML = html;
+      })
+      .catch(error => {
+        document.getElementById('lista-contas').innerHTML = '<p>Erro ao carregar contas.</p>';
+        console.error('Erro ao carregar contas:', error);
+      });
+  }
+
+  // --- Initial page load setup ---
   document.addEventListener('DOMContentLoaded', function() {
     hideAllSections(); // Oculta todas as seções inicialmente
     // Ao invés de ficar tudo branco, vamos mostrar uma seção padrão:
@@ -916,6 +975,8 @@
       document.getElementById('calendar').setAttribute('data-fullcalendar-initialized', 'true');
     }
   });
+
+
 
 
 </script>
