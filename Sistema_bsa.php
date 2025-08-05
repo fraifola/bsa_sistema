@@ -173,6 +173,69 @@
         .text-end {
             text-align: right !important;
         }
+        /* Espaçamento geral do corpo do site */
+
+/* Container principal - ajuste conforme necessário */
+.container, .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Ajuste específico para as seções */ 
+#clientes, 
+#cadastro-cliente, 
+#cadastro-conta-pagar, 
+#listar-pagamentos-secao,
+#lavagem-tanque-form {
+    padding: 20px;
+    margin: 10px 0;
+    background-color: #fff; /* Fundo branco para destacar */
+    border-radius: 8px; /* Cantos arredondados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra leve */
+}
+
+/* Ajuste para o calendário */
+#calendar {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Ajuste para formulários */
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+/* Ajuste para tabelas */
+.table {
+    margin: 15px 0;
+}
+
+/* Ajuste para os menus */
+.navbar {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Ajuste responsivo para mobile */
+@media (max-width: 768px) {
+    body {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    #operacional, 
+    #clientes, 
+    #cadastro-cliente, 
+    #cadastro-conta-pagar, 
+    #listar-pagamentos-secao,
+    #lavagem-tanque-form {
+        padding: 15px;
+    }
+}
     </style>
 </head>
 <body>
@@ -196,16 +259,16 @@
                             <li><a class="dropdown-item" href="#cadastro-cliente">Novo</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item dropdown mx-2">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#">Lavagem de Tanque</a></li>
-                            <li><a class="dropdown-item" href="#">Controle de Praga</a></li>
-                            <li><a class="dropdown-item" href="#">Fumigação</a></li>
-                            <li><a class="dropdown-item" href="#">Estoque</a></li>
-                        </ul>
-                    </li>
                                 <li class="nav-item dropdown mx-2">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#lavagem-tanque" id="lavagem-tanque-link">Lavagem de Tanque</a></li>
+                    <li><a class="dropdown-item" href="#">Controle de Praga</a></li>
+                    <li><a class="dropdown-item" href="#">Fumigação</a></li>
+                    <li><a class="dropdown-item" href="#">Estoque</a></li>
+                </ul>
+            </li>
+                <li class="nav-item dropdown mx-2">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Financeiro</a>
                 <ul class="dropdown-menu">
                     <li><a class="dropdown-item" href="#">Centro de Custo</a></li>
@@ -640,6 +703,265 @@
             </div>
         </div>
     </div>
+    <div id="lavagem-tanque-form" style="display: none;">
+    <h4>Formulário de Lavagem de Tanque</h4>
+    <form id="formLavagemTanque">
+        <!-- Seção de Dados do Cliente (preenchida automaticamente) -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Dados do Cliente
+            </div>
+            <div class="card-body">
+               <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Cliente *</label>
+                        <select id="cliente-lavagem" class="form-select" required>
+                            <option value="">Carregando clientes...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Fantasia</label>
+                        <input type="text" id="fantasia-lavagem" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Endereço</label>
+                        <input type="text" id="endereco-lavagem" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label">Telefone</label>
+                        <input type="text" id="telefone-lavagem" class="form-control" readonly>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="mb-3">
+                        <label class="form-label">Ponto de Referência</label>
+                        <input type="text" id="ponto-referencia-lavagem" name="ponto_referencia" class="form-control" placeholder="Ex: Próximo ao mercado X">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                <div class="mb-3">
+                    <label class="form-label">Contato</label>
+                    <input type="text" id="contato-lavagem" class="form-control" readonly>
+                </div>
+                </div>
+                </div>
+                    <div class="row mb-3">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Atividade do Imóvel *</label>
+                            <select id="atividade-imovel-lavagem" name="atividade_imovel" class="form-select" required>
+                                <option value="">Selecione...</option>
+                                <option value="comercial">Comercial</option>
+                                <option value="residencial">Residencial</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-3">
+                    <div class="mb-3">
+                    <label class="form-label">CEP</label>
+                    <input type="text" id="cep-lavagem" class="form-control" readonly>
+                    </div>
+                </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Vendedor</label>
+                            <input type="text" id="vendedor-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Setor</label>
+                            <input type="text" id="setor-lavagem" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Dados do Reservatório -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Dados do Reservatório
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Reserv.</label>
+                            <input type="text" id="reservatorio-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Volume (L)</label>
+                            <input type="number" id="volume-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Profund. (m)</label>
+                            <input type="number" id="profundidade-lavagem" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Diâm. (m)</label>
+                            <input type="number" id="diametro-lavagem" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Material</label>
+                            <select id="material-lavagem" class="form-select">
+                                <option value="">Selecione</option>
+                                <option value="Fibrocimento">Fibrocimento</option>
+                                <option value="Metal">Metal</option>
+                                <option value="Plástico">Plástico</option>
+                                <option value="Concreto">Concreto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="mb-3">
+                            <label class="form-label">Cobertura</label>
+                            <select id="cobertura-lavagem" class="form-select">
+                                <option value="">Selecione</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                                <option value="Parcial">Parcial</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Detritos Presentes</label>
+                            <input type="text" id="detritos-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Vetores Encontrados</label>
+                            <input type="text" id="vetores-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Rachaduras</label>
+                            <select id="rachaduras-lavagem" class="form-select">
+                                <option value="">Selecione</option>
+                                <option value="Sim">Sim</option>
+                                <option value="Não">Não</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Vetores Encontrados no Reservatório</label>
+                    <textarea id="vetores-reservatorio-lavagem" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Observações -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Observações
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label">Observações do Superior</label>
+                    <textarea id="obs-superior-lavagem" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Observações do Cliente</label>
+                    <textarea id="obs-cliente-lavagem" class="form-control" rows="2"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Informações Gerais</label>
+                    <textarea id="info-gerais-lavagem" class="form-control" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Execução do Serviço -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                Execução do Serviço
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Executores</label>
+                            <input type="text" id="executores-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Produto Utilizado</label>
+                            <input type="text" id="produto-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label class="form-label">Princípio Ativo</label>
+                            <input type="text" id="principio-ativo-lavagem" class="form-control">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Quantidade</label>
+                            <input type="number" id="quantidade-lavagem" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Unidade de Medida</label>
+                            <select id="unidade-medida-lavagem" class="form-select">
+                                <option value="L">Litros (L)</option>
+                                <option value="mL">Mililitros (mL)</option>
+                                <option value="kg">Quilogramas (kg)</option>
+                                <option value="g">Gramas (g)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Reg. Min. Saúde</label>
+                            <input type="text" id="reg-min-saude-lavagem" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="mb-3">
+                            <label class="form-label">Concentração (%)</label>
+                            <input type="number" id="concentracao-lavagem" class="form-control" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="submit" class="btn btn-success">Salvar Lavagem</button>
+            <button type="reset" class="btn btn-secondary">Limpar Formulário</button>
+        </div>
+    </form>
+</div>
     <footer class="text-center mt-4 mb-2 text-muted">
         Copyright © 2025 bsa.com.br
     </footer>
@@ -647,243 +969,450 @@
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales/pt-br.js'></script>
 <script>
+    // Variáveis globais
     var calendar;
     var editarOsModal;
+    var sections
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Elementos das seções
-        const navOperacional = document.getElementById('nav-operacional');
-        const operacionalSection = document.getElementById('operacional');
-        const clientesSection = document.getElementById('clientes');
-        const cadastroClienteSection = document.getElementById('cadastro-cliente');
-        const cadastroContaPagarSection = document.getElementById('cadastro-conta-pagar');
-        const listarPagamentosSecao = document.getElementById('listar-pagamentos-secao');
-
+        // Inicializa as seções
+        sections = {
+            operacional: document.getElementById('operacional'),
+            clientes: document.getElementById('clientes'),
+            cadastroCliente: document.getElementById('cadastro-cliente'),
+            cadastroContaPagar: document.getElementById('cadastro-conta-pagar'),
+            listarPagamentos: document.getElementById('listar-pagamentos-secao'),
+            lavagemTanque: document.getElementById('lavagem-tanque-form')
+        };
         // Inicializar calendário e modal
-        var calendarEl = document.getElementById('calendar');
-        editarOsModal = new bootstrap.Modal(document.getElementById('editarOsModal'));
+        initializeCalendar();
+        initializeModals()
         
         // Mostrar apenas a seção operacional inicialmente
+        // Mostrar apenas a seção operacional inicialmente
         hideAllSections();
-        operacionalSection.style.display = 'block';
+        sections.operacional.style.display = 'block';
         
-        // Inicializar calendário
-        initializeCalendar();
+        // Configurar navegação
+        setupNavigation();
+        
+        // Carregar dados iniciais
+        carregarClientesDropdown();
+    });
 
-        // ============ NAVEGAÇÃO ENTRE SEÇÕES ============
-        navOperacional.addEventListener('click', function(e) {
+    // ============ FUNÇÕES PRINCIPAIS ============
+
+    function hideAllSections() {
+        if (!sections) return; // Verificação de segurança
+        
+        Object.values(sections).forEach(section => {
+            if (section) section.style.display = 'none';
+        });
+    }
+
+    function initializeCalendar() {
+        const calendarEl = document.getElementById('calendar');
+        if (!calendarEl) return;
+
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'pt-br',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: 'listar_os_calendario.php',
+            editable: true,
+            eventStartEditable: true,
+            eventDurationEditable: true,
+            eventDrop: updateEventOnServer,
+            eventResize: updateEventOnServer,
+            eventClick: showEditModal
+        });
+        calendar.render();
+    }
+    function initializeModals() {
+        const modalElement = document.getElementById('editarOsModal');
+        if (modalElement) {
+            editarOsModal = new bootstrap.Modal(modalElement);
+        }
+    }
+
+    // ============ NAVEGAÇÃO ============
+    function setupNavigation() {
+        // Navegação principal
+        document.getElementById('nav-operacional')?.addEventListener('click', (e) => {
             e.preventDefault();
             hideAllSections();
-            operacionalSection.style.display = 'block';
+            sections.operacional.style.display = 'block';
         });
 
-        // Listener para o dropdown de Clientes
-        document.querySelectorAll('.dropdown-item[href="#clientes"]').forEach(item => {
+        // Configurar listeners para dropdowns
+        setupDropdownNavigation('#clientes', sections.clientes, carregarClientesDropdown);
+        setupDropdownNavigation('#cadastro-cliente', sections.cadastroCliente);
+        setupDropdownNavigation('#cadastro-conta-pagar', sections.cadastroContaPagar);
+        setupDropdownNavigation('#listar-pagamentos-secao', sections.listarPagamentos, carregarContas);
+        setupDropdownNavigation('#lavagem-tanque', sections.lavagemTanque, initializeLavagemTanque);
+    }
+
+    function setupDropdownNavigation(selector, section, callback = null) {
+        document.querySelectorAll(`.dropdown-item[href="${selector}"]`).forEach(item => {
             item.addEventListener('click', function(e) {
                 e.preventDefault();
                 hideAllSections();
-                clientesSection.style.display = 'block';
-                carregarClientesDropdown();
-            });
-        });
-
-        // Listener para o dropdown de Cadastro de Cliente
-        document.querySelectorAll('.dropdown-item[href="#cadastro-cliente"]').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideAllSections();
-                cadastroClienteSection.style.display = 'block';
-            });
-        });
-
-        // Listener para o dropdown de Contas a Pagar
-        document.querySelectorAll('.dropdown-item[href="#cadastro-conta-pagar"]').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideAllSections();
-                cadastroContaPagarSection.style.display = 'block';
-            });
-        });
-
-        // Listener para o dropdown de Listar Pagamentos
-        document.querySelectorAll('.dropdown-item[href="#listar-pagamentos-secao"]').forEach(item => {
-            item.addEventListener('click', function(e) {
-                e.preventDefault();
-                hideAllSections();
-                listarPagamentosSecao.style.display = 'block';
-                carregarContas();
-            });
-        });
-
-        // ============ FUNÇÕES AUXILIARES ============
-        function hideAllSections() {
-            operacionalSection.style.display = 'none';
-            clientesSection.style.display = 'none';
-            cadastroClienteSection.style.display = 'none';
-            cadastroContaPagarSection.style.display = 'none';
-            listarPagamentosSecao.style.display = 'none';
-        }
-
-        function initializeCalendar() {
-            calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'pt-br',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: 'listar_os_calendario.php',
-                editable: true,
-                eventStartEditable: true,
-                eventDurationEditable: true,
-                eventDrop: function(info) {
-                    updateEventOnServer(info.event);
-                },
-                eventResize: function(info) {
-                    updateEventOnServer(info.event);
-                },
-                eventClick: function(info) {
-                    showEditModal(info.event);
+                section.style.display = 'block';
+                if (callback && typeof callback === 'function') {
+                    callback();
                 }
             });
-            calendar.render();
-        }
+        });
+    }
 
-        function updateEventOnServer(event) {
-            const newStart = event.start.toISOString().slice(0, 19).replace('T', ' ');
-            let newEnd = event.end ? event.end.toISOString().slice(0, 19).replace('T', ' ') : null;
-            
-            const formData = new FormData();
-            formData.append('id', event.id);
-            formData.append('data_inicio', newStart.split(' ')[0]);
-            formData.append('hora_inicio', newStart.split(' ')[1].substring(0, 5));
-            formData.append('hora_fim', newEnd ? newEnd.split(' ')[1].substring(0, 5) : '');
-            
-            fetch('atualizar_os.php', {
-                method: 'POST',
-                body: formData
-            })
+    // ============ FUNÇÕES AUXILIARES ============
+    function hideAllSections() {
+        Object.values(sections).forEach(section => {
+            if (section) section.style.display = 'none';
+        });
+    }
+
+    function formatTimeForInput(date) {
+        if (!date) return '';
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    }
+
+    function handleResponse(response) {
+        if (!response.ok) {
+            return response.text().then(text => { throw new Error(text) });
+        }
+        return response.json();
+    }
+
+    function handleError(error) {
+        console.error('Erro:', error);
+        alert('Ocorreu um erro: ' + error.message);
+    }
+
+    // ============ FUNÇÕES DE CARREGAMENTO DE DADOS ============
+    function carregarClientesDropdown() {
+        fetch('get_clientes.php')
             .then(handleResponse)
+            .then(clientes => {
+                const selects = document.querySelectorAll('#tipo_cliente, #edit_tipo_cliente');
+                
+                selects.forEach(select => {
+                    if (!select) return;
+                    
+                    select.innerHTML = '<option value="">Selecione o Cliente</option>';
+                    if (clientes.length > 0) {
+                        clientes.forEach(cliente => {
+                            const option = document.createElement('option');
+                            option.value = cliente.id;
+                            option.textContent = cliente.nome;
+                            select.appendChild(option);
+                        });
+                    }
+                });
+            })
             .catch(handleError);
-        }
+    }
 
-        function showEditModal(event) {
-            document.getElementById('edit_os_id').value = event.id;
-            document.getElementById('edit_tipo_cliente').value = event.extendedProps.cliente_nome || '';
-            document.getElementById('edit_os_servico').value = event.extendedProps.servico || '';
-            document.getElementById('edit_os_data_inicio').value = event.start.toISOString().split('T')[0];
-            document.getElementById('edit_os_hora_inicio').value = formatTimeForInput(event.start);
-            document.getElementById('edit_os_hora_fim').value = formatTimeForInput(event.end);
-            document.getElementById('edit_os_observacoes').value = event.extendedProps.description || '';
-            
+    function carregarContas() {
+        fetch('listar_contas.php')
+            .then(handleResponse)
+            .then(data => {
+                if (!data.success) {
+                    throw new Error(data.error || 'Erro no servidor');
+                }
+                
+                const tabela = document.getElementById('corpoTabelaContas');
+                if (!tabela) return;
+                
+                tabela.innerHTML = '';
+                
+                data.data.forEach(conta => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${formatarData(conta.data_emissao)}</td>
+                        <td>${conta.fornecedor || ''}</td>
+                        <td>${conta.documento_nf || ''}</td>
+                        <td>${formatarData(conta.data_vencimento)}</td>
+                        <td class="text-end">R$ ${formatarMoeda(conta.subtotal)}</td>
+                        <td>${conta.situacao || ''}</td>
+                        <td>${conta.tipo || ''}</td>
+                        <td>${conta.conta_corrente || ''}</td>
+                        <td>${conta.plano_contas || ''}</td>
+                        <td>${conta.descricao || ''}</td>
+                        <td>${conta.repeticao || ''}</td>
+                        <td class="text-end">R$ ${formatarMoeda(conta.juros_multa)}</td>
+                        <td class="text-end">R$ ${formatarMoeda(conta.desconto)}</td>
+                        <td>${conta.forma_pagamento || ''}</td>
+                        <td>${formatarData(conta.data_liquidacao)}</td>
+                        <td class="text-end">R$ ${formatarMoeda(conta.total_pago)}</td>
+                    `;
+                    tabela.appendChild(row);
+                });
+            })
+            .catch(handleError);
+    }
+
+    function formatarData(data) {
+        if (!data) return '';
+        const date = new Date(data);
+        return date.toLocaleDateString('pt-BR');
+    }
+
+    function formatarMoeda(valor) {
+        return parseFloat(valor || 0).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    // ============ FUNÇÕES DO CALENDÁRIO ============
+    function updateEventOnServer(info) {
+        const event = info.event;
+        const newStart = event.start.toISOString().slice(0, 19).replace('T', ' ');
+        let newEnd = event.end ? event.end.toISOString().slice(0, 19).replace('T', ' ') : null;
+        
+        const formData = new FormData();
+        formData.append('id', event.id);
+        formData.append('data_inicio', newStart.split(' ')[0]);
+        formData.append('hora_inicio', newStart.split(' ')[1].substring(0, 5));
+        formData.append('hora_fim', newEnd ? newEnd.split(' ')[1].substring(0, 5) : '');
+        
+        fetch('atualizar_os.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(handleResponse)
+        .then(data => {
+            if (!data.success) {
+                calendar.refetchEvents();
+                throw new Error(data.message);
+            }
+        })
+        .catch(handleError);
+    }
+
+    function showEditModal(info) {
+        const event = info.event;
+        
+        document.getElementById('edit_os_id').value = event.id;
+        document.getElementById('edit_tipo_cliente').value = event.extendedProps.cliente_nome || '';
+        document.getElementById('edit_os_servico').value = event.extendedProps.servico || '';
+        document.getElementById('edit_os_data_inicio').value = event.start.toISOString().split('T')[0];
+        document.getElementById('edit_os_hora_inicio').value = formatTimeForInput(event.start);
+        document.getElementById('edit_os_hora_fim').value = formatTimeForInput(event.end);
+        document.getElementById('edit_os_observacoes').value = event.extendedProps.description || '';
+        
+        if (editarOsModal) {
             editarOsModal.show();
         }
+    }
 
-        function formatTimeForInput(date) {
-            if (!date) return '';
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}`;
+// ============ FORMULÁRIO DE LAVAGEM DE TANQUE ============
+document.addEventListener('DOMContentLoaded', function() {
+    initializeLavagemTanque();
+});
+
+function initializeLavagemTanque() {
+    carregarClientesParaLavagem();
+    
+    // Configura eventos
+    document.getElementById('cliente-lavagem')?.addEventListener('change', function() {
+        const clienteId = this.value;
+        if (clienteId) {
+            carregarDadosCliente(clienteId);
+        } else {
+            limparDadosCliente();
         }
-
-        // ============ FUNÇÕES DE CARREGAMENTO DE DADOS ============
-        function carregarClientesDropdown() {
-            fetch('get_clientes.php')
-                .then(response => response.json())
-                .then(clientes => {
-                    const selects = document.querySelectorAll('#tipo_cliente, #edit_tipo_cliente');
-                    
-                    selects.forEach(select => {
-                        select.innerHTML = '<option value="">Selecione o Cliente</option>';
-                        if (clientes.length > 0) {
-                            clientes.forEach(cliente => {
-                                const option = document.createElement('option');
-                                option.value = cliente.id;
-                                option.textContent = cliente.nome;
-                                select.appendChild(option);
-                            });
-                        }
-                    });
-                })
-                .catch(handleError);
+    });
+    
+    document.getElementById('formLavagemTanque')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if (validarFormularioLavagem()) {
+            const dados = coletarDadosLavagem();
+            console.log('Dados para envio:', dados);
+            enviarDadosLavagem(dados);
         }
+    });
+}
 
-        function carregarContas() {
-    fetch('listar_contas.php')
+// Carrega clientes (todos ou apenas operacionais conforme necessidade)
+// ============ FUNÇÕES ORIGINAIS MANTIDAS ============
+
+function carregarClientesParaLavagem() {
+    fetch('get_clientes.php')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erro na rede');
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
         })
-        .then(data => {
-            if (!data.success) {
-                throw new Error(data.error || 'Erro no servidor');
+        .then(result => {
+            if (!result.success) {
+                throw new Error(result.error || 'Erro desconhecido ao carregar clientes');
             }
+
+            const select = document.getElementById('cliente-lavagem');
+            select.innerHTML = '<option value="">Selecione o cliente...</option>';
             
-            const tabela = document.getElementById('corpoTabelaContas');
-            tabela.innerHTML = '';
+            // Garante que estamos trabalhando com um array
+            const clientes = Array.isArray(result.data) ? result.data : [];
             
-            data.data.forEach(conta => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${formatarData(conta.data_emissao)}</td>
-                    <td>${conta.fornecedor || ''}</td>
-                    <td>${conta.documento_nf || ''}</td>
-                    <td>${formatarData(conta.data_vencimento)}</td>
-                    <td class="text-end">R$ ${formatarMoeda(conta.subtotal)}</td>
-                    <td>${conta.situacao || ''}</td>
-                    <td>${conta.tipo || ''}</td>
-                    <td>${conta.conta_corrente || ''}</td>
-                    <td>${conta.plano_contas || ''}</td>
-                    <td>${conta.descricao || ''}</td>
-                    <td>${conta.repeticao || ''}</td>
-                    <td class="text-end">R$ ${formatarMoeda(conta.juros_multa)}</td>
-                    <td class="text-end">R$ ${formatarMoeda(conta.desconto)}</td>
-                    <td>${conta.forma_pagamento || ''}</td>
-                    <td>${formatarData(conta.data_liquidacao)}</td>
-                    <td class="text-end">R$ ${formatarMoeda(conta.total_pago)}</td>
-                `;
-                tabela.appendChild(row);
+            clientes.forEach(cliente => {
+                const option = document.createElement('option');
+                option.value = cliente.id;
+                // Usa fantasia se existir, caso contrário usa razão social
+                option.textContent = cliente.fantasia || cliente.razao_social;
+                select.appendChild(option);
             });
         })
         .catch(error => {
-            console.error('Erro:', error);
-            alert('Falha ao carregar contas: ' + error.message);
+            console.error('Erro ao carregar clientes:', error);
+            alert('Erro ao carregar clientes: ' + error.message);
         });
 }
 
-// Funções auxiliares para formatação
-function formatarData(data) {
-    if (!data) return '';
-    const date = new Date(data);
-    return date.toLocaleDateString('pt-BR');
-}
-
-function formatarMoeda(valor) {
-    return parseFloat(valor || 0).toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
-        // ============ HANDLERS GENÉRICOS ============
-        function handleResponse(response) {
+function carregarDadosCliente(clienteId) {
+    fetch('get_clientes.php')
+        .then(response => {
             if (!response.ok) {
-                return response.text().then(text => { throw new Error(text) });
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             return response.json();
-        }
+        })
+        .then(result => {
+            if (!result.success) {
+                throw new Error(result.error || 'Erro ao buscar dados do cliente');
+            }
 
-        function handleError(error) {
-            console.error('Erro:', error);
-            alert('Ocorreu um erro: ' + error.message);
-        }
+            // Garante que estamos trabalhando com um array
+            const clientes = Array.isArray(result.data) ? result.data : [];
+            const cliente = clientes.find(c => c.id == clienteId);
+            
+            if (!cliente) {
+                throw new Error('Cliente não encontrado');
+            }
 
-        // ============ INICIALIZAÇÕES ============
-        carregarClientesDropdown();
+            // Preenche os campos do formulário
+            document.getElementById('fantasia-lavagem').value = cliente.fantasia || cliente.razao_social;
+            
+            if (cliente.endereco_completo) {
+                document.getElementById('endereco-lavagem').value = cliente.endereco_completo;
+            } else {
+                document.getElementById('endereco-lavagem').value = cliente.endereco || '';
+            }
+            
+            document.getElementById('telefone-lavagem').value = cliente.telefone || '';
+            document.getElementById('contato-lavagem').value = cliente.contato_responsavel || '';
+            document.getElementById('cep-lavagem').value = cliente.cep || '';
+        })
+        .catch(error => {
+            console.error('Erro ao carregar dados do cliente:', error);
+            alert('Erro ao carregar dados do cliente: ' + error.message);
+        });
+}
+
+function limparDadosCliente() {
+    const campos = [
+        'fantasia-lavagem',
+        'endereco-lavagem',
+        'telefone-lavagem',
+        'contato-lavagem',
+        'cep-lavagem'
+    ];
+    
+    campos.forEach(id => {
+        document.getElementById(id).value = '';
     });
+}
+
+function validarFormularioLavagem() {
+    const camposObrigatorios = [
+        { id: 'cliente-lavagem', mensagem: 'Selecione um cliente' },
+        { id: 'atividade-imovel-lavagem', mensagem: 'Informe o tipo de atividade do imóvel' },
+        { id: 'volume-lavagem', mensagem: 'Informe o volume do reservatório' }
+    ];
+    
+    for (const campo of camposObrigatorios) {
+        const elemento = document.getElementById(campo.id);
+        if (!elemento || !elemento.value.trim()) {
+            alert(campo.mensagem);
+            elemento?.focus();
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+function coletarDadosLavagem() {
+    // Dados básicos
+    const dados = {
+        cliente_id: document.getElementById('cliente-lavagem').value,
+        atividade_imovel: document.getElementById('atividade-imovel-lavagem').value,
+        ponto_referencia: document.getElementById('ponto-referencia-lavagem').value,
+        
+        // Dados do cliente
+        cliente_data: {
+            nome: document.getElementById('fantasia-lavagem').value,
+            endereco: document.getElementById('endereco-lavagem').value,
+            telefone: document.getElementById('telefone-lavagem').value,
+            contato: document.getElementById('contato-lavagem').value,
+            cep: document.getElementById('cep-lavagem').value
+        },
+        
+        // Dados do reservatório
+        reservatorio: {
+            volume: document.getElementById('volume-lavagem').value,
+            profundidade: document.getElementById('profundidade-lavagem').value,
+            diametro: document.getElementById('diametro-lavagem').value,
+            material: document.getElementById('material-lavagem').value,
+            cobertura: document.getElementById('cobertura-lavagem').value,
+            detritos: document.getElementById('detritos-lavagem').value,
+            vetores: document.getElementById('vetores-lavagem').checked,
+            rachaduras: document.getElementById('rachaduras-lavagem').checked,
+            vetores_reservatorio: document.getElementById('vetores-reservatorio-lavagem').checked
+        },
+        
+        // Observações
+        observacoes: {
+            superior: document.getElementById('obs-superior-lavagem').value,
+            cliente: document.getElementById('obs-cliente-lavagem').value,
+            gerais: document.getElementById('info-gerais-lavagem').value
+        },
+        
+        // Execução
+        execucao: {
+            executores: document.getElementById('executores-lavagem').value,
+            produto: document.getElementById('produto-lavagem').value,
+            principio_ativo: document.getElementById('principio-ativo-lavagem').value,
+            quantidade: document.getElementById('quantidade-lavagem').value,
+            unidade_medida: document.getElementById('unidade-medida-lavagem').value,
+            concentracao: document.getElementById('concentracao-lavagem').value
+        }
+    };
+    
+    return dados;
+}
+
+function enviarDadosLavagem(dados) {
+    // Implemente aqui o envio dos dados para o servidor
+    console.log('Enviando dados:', dados);
+    // Exemplo:
+    // fetch('salvar_lavagem.php', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify(dados)
+    // })
+    // .then(...)
+    
+    alert('Formulário validado e pronto para envio! Verifique o console para os dados coletados.');
+}
 </script>
 </body>
 </html>
