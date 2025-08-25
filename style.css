@@ -1,0 +1,292 @@
+        .navbar {
+            background-color: #7fc241;
+        }
+        .navbar-brand, .nav-link, .navbar-text {
+            color: white !important;
+        }
+        .table thead th {
+            background-color: #e9ecef;
+        }
+        .btn-primary {
+            background-color: #7fc241;
+            border: none;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        /* 🌈 Cores personalizadas para o Financeiro */
+        .financeiro-header {
+        background-color: #6f42c1; /* roxo */
+        color: #fff;
+        border-radius: 8px;
+        padding: 10px;
+    }
+        .financeiro-select, .financeiro-select-verde {
+            background-color: #ffffff !important;
+            color: rgb(0, 0, 0) !important;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .financeiro-input {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+        /* Estilos para a tabela de Contas Registradas */
+        #listar-pagamentos-secao .table thead th {
+            background-color: #e9ecef;
+            text-align: left;
+        }
+        #listar-pagamentos-secao .table tbody td {
+            text-align: left;
+            padding: 8px 12px;
+            max-width: 190px;
+        }
+        #listar-pagamentos-secao .table th:nth-child(4),
+        #listar-pagamentos-secao .table td:nth-child(4),
+        #listar-pagamentos-secao .table th:nth-child(10),
+        #listar-pagamentos-secao .table td:nth-child(10),
+        #listar-pagamentos-secao .table th:nth-child(11),
+        #listar-pagamentos-secao .table td:nth-child(11),
+        #listar-pagamentos-secao .table th:nth-child(13),
+        #listar-pagamentos-secao .table td:nth-child(13) {
+            text-align: right;
+        }
+        #listar-pagamentos-secao .table th:nth-child(3),
+        #listar-pagamentos-secao .table td:nth-child(3),
+        #listar-pagamentos-secao .table th:nth-child(5),
+        #listar-pagamentos-secao .table td:nth-child(5),
+        #listar-pagamentos-secao .table th:nth-child(12),
+        #listar-pagamentos-secao .table td:nth-child(12) {
+            text-align: center;
+        }
+        #listar-pagamentos-secao .table th,
+        #listar-pagamentos-secao .table td {
+            padding: 10px 12px;
+            font-size: 11px;
+            vertical-align: middle;
+        }
+        #listar-pagamentos-secao .table td:nth-child(7),
+        #listar-pagamentos-secao .table td:nth-child(8) {
+            white-space: normal;
+            word-break: break-word;
+            max-width: 190px;
+        }
+        #listar-pagamentos-secao .table td:nth-child(1),
+        #listar-pagamentos-secao .table td:nth-child(6) {
+            white-space: normal;
+            word-break: break-word;
+        }
+        .descricao-expandida-row td {
+            background-color: #f1f1f1;
+            font-style: italic;
+            padding: 10px;
+        }
+        #listar-pagamentos-secao .table tbody tr:nth-child(odd) {
+            background-color: #f4f4f4;
+        }
+        .descricao-row td {
+            background-color: #f1f1f1;
+            font-style: italic;
+            padding: 10px;
+        }
+        .clickable-row {
+            cursor: pointer;
+        }
+        .linha-pagamento {
+            cursor: pointer;
+        }
+        .descricao-extra td {
+            font-style: italic;
+            padding: 8px 12px;
+        }
+
+        /* Estilos específicos para o FullCalendar */
+        #calendar {
+            max-width: 900px; /* Ajuste conforme a largura desejada */
+            margin: 40px auto;
+            font-size: 14px; /* Ajuste o tamanho da fonte */
+        }
+        .fc-toolbar-chunk h2 {
+            font-size: 1.5rem; /* Ajuste o tamanho do título do mês/semana */
+        }
+        .fc-button-group .fc-button {
+            background-color: #7fc241;
+            border-color: #7fc241;
+            color: white;
+        }
+        .fc-button-group .fc-button:hover {
+            background-color: #6da735;
+            border-color: #6da735;
+        }
+        .fc-button-active {
+            background-color: #5b8f2d !important;
+            border-color: #5b8f2d !important;
+        }
+        .fc-daygrid-day-number {
+            font-weight: bold;
+        }
+        .fc-event {
+            background-color: #7fc241;
+            border-color: #7fc241;
+        }
+        .modal-body .form-group {
+            margin-bottom: 1rem;
+        }
+        /* Adicione no seu <style> ou arquivo CSS */
+        #listar-pagamentos-secao {
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        #tabelaContasPagar {
+            white-space: nowrap;
+            min-width: 100%;
+        }
+
+        #tabelaContasPagar th {
+            position: sticky;
+            top: 0;
+            background-color: #f8f9fa;
+        }
+
+        #tabelaContasPagar td {
+            white-space: normal;
+            word-break: break-word;
+        }
+
+        .text-end {
+            text-align: right !important;
+        }
+        /* Espaçamento geral do corpo do site */
+
+/* Container principal - ajuste conforme necessário */
+.container, .container-fluid {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Ajuste específico para as seções */ 
+#clientes, 
+#cadastro-cliente, 
+#cadastro-conta-pagar, 
+#listar-pagamentos-secao,
+#lavagem-tanque-form {
+    padding: 20px;
+    margin: 10px 0;
+    background-color: #fff; /* Fundo branco para destacar */
+    border-radius: 8px; /* Cantos arredondados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra leve */
+}
+
+/* Ajuste para o calendário */
+#calendar {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Ajuste para formulários */
+.card {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+}
+
+/* Ajuste para tabelas */
+.table {
+    margin: 15px 0;
+}
+
+/* Ajuste para os menus */
+.navbar {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Ajuste responsivo para mobile */
+@media (max-width: 768px) {
+    body {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    
+    #operacional, 
+    #clientes, 
+    #cadastro-cliente, 
+    #cadastro-conta-pagar, 
+    #listar-pagamentos-secao,
+    #lavagem-tanque-form,
+    #estoque {
+        padding: 15px;
+    }
+}
+/* Estilos específicos para Estoque */
+#estoque {
+    padding: 20px;
+    margin: 40px 0;
+    background-color: #fff;  /* fundo branco */
+    border-radius: 8px;      /* cantos arredondados */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* sombra leve */
+}
+
+#estoque h3 {
+    background-color: #7fc241; /* verde igual ao Financeiro */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+#estoque input, 
+#estoque select, 
+#estoque textarea {
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+#estoque .btn {
+    background-color: #7fc241;
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+#estoque .btn:hover {
+    background-color: #6da735;
+}
+
+#estoque .table thead th {
+    background-color: #e9ecef;
+    text-align: left;
+}
+
+#estoque .table tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+}
+#estoque form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px; /* Espaço entre os elementos */
+    align-items: center;
+}
+#estoque form .btn {
+    margin-top: 5px;
+    padding: 8px 16px;
+}
+

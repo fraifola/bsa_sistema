@@ -1,5 +1,5 @@
 <?php
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 
 // Configurações do banco
 $host = "localhost";
@@ -15,52 +15,75 @@ try {
     }
 
     // Recebe os dados do POST
-    $data = json_decode(file_get_contents('php://input'), true);
+    $input = file_get_contents('php://input');
+    $data = json_decode($input, true);
     
-    // Prepara a query SQL
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        throw new Exception("JSON inválido: " . json_last_error_msg());
+    }
+
+    // CORREÇÃO: 31 parâmetros na query
     $stmt = $conn->prepare("INSERT INTO lavagem_tanque 
-        (cliente_id, fantasia, endereco, telefone, ponto_referencia, contato, atividade_imovel, cep, vendedor, setor,
-         reservatorio, volume, profundidade, diametro, material, cobertura, detritos, vetores, rachaduras,
-         vetores_reservatorio, obs_superior, obs_cliente, info_gerais, executores, produto, principio_ativo,
-         quantidade, unidade_medida, reg_min_saude, concentracao, data_registro)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())");
-    
-    // Bind parameters
-    $stmt->bind_param("isssssssssssddssssssssssssdssd", 
-        $data['cliente_id'],
-        $data['fantasia'],
-        $data['endereco'],
-        $data['telefone'],
-        $data['ponto_referencia'],
-        $data['contato'],
-        $data['atividade_imovel'],
-        $data['cep'],
-        $data['vendedor'],
-        $data['setor'],
-        $data['reservatorio'],
-        $data['volume'],
-        $data['profundidade'],
-        $data['diametro'],
-        $data['material'],
-        $data['cobertura'],
-        $data['detritos'],
-        $data['vetores'],
-        $data['rachaduras'],
-        $data['vetores_reservatorio'],
-        $data['obs_superior'],
-        $data['obs_cliente'],
-        $data['info_gerais'],
-        $data['executores'],
-        $data['produto'],
-        $data['principio_ativo'],
-        $data['quantidade'],
-        $data['unidade_medida'],
-        $data['reg_min_saude'],
-        $data['concentracao']
-    );
+    (cliente_id, fantasia, telefone, endereco, contato, cep, vendedor, setor, reservatorio,
+     principio_ativo, reg_min_saude, atividade_imovel, ponto_referencia, volume, profundidade, diametro,
+     material, cobertura, detritos, vetores, rachaduras, vetores_reservatorio,
+     obs_superior, obs_cliente, info_gerais, executores, produto_id, produto,
+     quantidade_utilizada, unidade_medida, concentracao)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+
+$stmt->bind_param("issssssssssssddssssssssssissdsd",
+    $data['cliente_id'],
+    $data['fantasia'],
+    $data['telefone'],
+    $data['endereco'],
+    $data['contato'],
+    $data['cep'],
+    $data['vendedor'],
+    $data['setor'],
+    $data['reservatorio'],
+    $data['principio_ativo'],
+    $data['reg_min_saude'],
+    $data['atividade_imovel'],
+    $data['ponto_referencia'],
+    $data['volume'],
+    $data['profundidade'],
+    $data['diametro'],
+    $data['material'],
+    $data['cobertura'],
+    $data['detritos'],
+    $data['vetores'],
+    $data['rachaduras'],
+    $data['vetores_reservatorio'],
+    $data['obs_superior'],
+    $data['obs_cliente'],
+    $data['info_gerais'],
+    $data['executores'],
+    $data['produto_id'],
+    $data['produto'],
+    $data['quantidade_utilizada'],
+    $data['unidade_medida'],
+    $data['concentracao']
+);
+
     
     if ($stmt->execute()) {
-        echo json_encode(['success' => true, 'message' => 'Registro salvo com sucesso']);
+        $lavagem_id = $conn->insert_id;
+        
+        // Atualiza o estoque
+        if (isset($data['produto_id']) && isset($data['quantidade'])) {
+            $sqlEstoque = "UPDATE estoque SET quantidade = quantidade - ? WHERE id = ?";
+            $stmtEstoque = $conn->prepare($sqlEstoque);
+            $stmtEstoque->bind_param("di", $data['quantidade'], $data['produto_id']);
+            $stmtEstoque->execute();
+            $stmtEstoque->close();
+        }
+        
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Registro salvo com sucesso',
+            'lavagem_id' => $lavagem_id
+        ]);
     } else {
         throw new Exception("Erro ao salvar: " . $stmt->error);
     }
@@ -70,5 +93,11 @@ try {
     
 } catch (Exception $e) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    error_log("Erro em salvar_lavagem.php: " . $e->getMessage());
+    echo json_encode([
+        'success' => false, 
+        'message' => 'Erro: ' . $e->getMessage()
+    ]);
 }
+
+?>
