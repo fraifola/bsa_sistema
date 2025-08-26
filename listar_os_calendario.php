@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-require_once 'conexao.php';
+require_once 'conexao2.php';
 
 $sql = "SELECT id, tipo_cliente, servico, data_inicio, hora_inicio, hora_fim, observacoes FROM ordens_servico ORDER BY data_inicio DESC";
 $result = $conn->query($sql);

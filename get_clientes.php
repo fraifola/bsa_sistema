@@ -30,7 +30,8 @@ try {
 
     $query = "SELECT " . implode(', ', $selectColumns) . " FROM clientes";
     
-    if (isset($_GET['operacional']) && in_array('operacional', $availableColumns)) {
+    // FILTRO OPERACIONAL - Corrigido
+    if (isset($_GET['operacional']) && $_GET['operacional'] == '1' && in_array('operacional', $availableColumns)) {
         $query .= " WHERE operacional = 1";
     }
     

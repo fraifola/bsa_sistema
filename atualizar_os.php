@@ -2,7 +2,7 @@
 header('Content-Type: application/json');
 session_start();
 
-require_once 'conexao.php';
+require_once 'conexao2.php';
 
 $response = ['success' => false, 'message' => ''];
 

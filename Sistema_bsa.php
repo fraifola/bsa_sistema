@@ -104,8 +104,8 @@
                     <div class="col-md-6">
                         <label for="tipo_cliente" class="form-label">Cliente</label>
                         <select id="tipo_cliente" name="cliente" class="form-select">
-                            <option value="">Carregando clientes...</option>
-                            </select>
+                        <option value="">Carregando clientes...</option>
+                    </select>
                     </div>
                     <div class="col-md-6">
                         <label for="os_servico" class="form-label">Serviço</label>
@@ -185,7 +185,7 @@
     </div>
     
     <footer class="text-center mt-4 mb-2 text-muted">
-        Copyright © 2025 bsa.com.br
+        Peu Bid é FODA!!
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
@@ -209,13 +209,7 @@
         // Inicializar calendário e modal
         initializeCalendar();
         initializeModals()
-        
-        // Mostrar apenas a seção operacional inicialmente
-        // Mostrar apenas a seção operacional inicialmente
-        hideAllSections();
-        sections.operacional.style.display = 'block';
-        
-        // Configurar navegação
+
         setupNavigation();
         
         // Carregar dados iniciais
@@ -304,27 +298,46 @@
 
     // ============ FUNÇÕES DE CARREGAMENTO DE DADOS ============
     function carregarClientesDropdown() {
-        fetch('get_clientes.php')
-            .then(handleResponse)
-            .then(clientes => {
-                const selects = document.querySelectorAll('#tipo_cliente, #edit_tipo_cliente');
-                
-                selects.forEach(select => {
-                    if (!select) return;
-                    
-                    select.innerHTML = '<option value="">Selecione o Cliente</option>';
-                    if (clientes.length > 0) {
-                        clientes.forEach(cliente => {
-                            const option = document.createElement('option');
-                            option.value = cliente.id;
-                            option.textContent = cliente.nome;
-                            select.appendChild(option);
-                        });
-                    }
+    console.log('Iniciando carregamento de clientes...');
+    
+    fetch('get_clientes.php?operacional=1')
+        .then(response => response.json())
+        .then(result => {
+            console.log('Dados recebidos:', result);
+            
+            if (!result.success) {
+                throw new Error(result.error || 'Erro no servidor');
+            }
+
+            // Preencher select principal
+            const selectPrincipal = document.getElementById('tipo_cliente');
+            if (selectPrincipal) {
+                selectPrincipal.innerHTML = '<option value="">Selecione o Cliente</option>';
+                result.data.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.fantasia || cliente.razao_social;
+                    selectPrincipal.appendChild(option);
                 });
-            })
-            .catch(handleError);
-    }
+            }
+
+            // Preencher select do modal (se existir)
+            const selectModal = document.getElementById('edit_tipo_cliente');
+            if (selectModal) {
+                selectModal.innerHTML = '<option value="">Selecione o Cliente</option>';
+                result.data.forEach(cliente => {
+                    const option = document.createElement('option');
+                    option.value = cliente.id;
+                    option.textContent = cliente.fantasia || cliente.razao_social;
+                    selectModal.appendChild(option);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao carregar clientes. Verifique o console.');
+        });
+}
     function formatarData(data) {
         if (!data) return '';
         const date = new Date(data);
