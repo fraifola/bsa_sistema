@@ -35,7 +35,7 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Serviços</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="lavagem-tanque.php">Lavagem de Tanque</a></li>
-                        <li><a class="dropdown-item" href="#">Controle de Praga</a></li>
+                        <li><a class="dropdown-item" href="controle_praga.php">Controle de Praga</a></li>
                         <li><a class="dropdown-item" href="#">Fumigação</a></li>
                         <li><a class="dropdown-item" href="estoque.php">Estoque</a></li>
                     </ul>
