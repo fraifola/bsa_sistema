@@ -274,8 +274,15 @@
         <div class="d-flex justify-content-end gap-2">
             <button type="submit" class="btn btn-success">Salvar Lavagem</button>
             <button type="reset" class="btn btn-secondary">Limpar Formulário</button>
-        </div>
+        </div>  
 </div>
+<div class="d-flex justify-content-start gap-2 mt-4">
+    <button type="button" class="btn btn-primary" onclick="listarLavagens()">
+    Listar Lavagens
+</button>
+
+<div id="lista-lavagens" class="mt-3"></div>
+
 <script>
   // ============ FORMULÁRIO DE LAVAGEM DE TANQUE ============
 document.addEventListener('DOMContentLoaded', function() {
@@ -539,6 +546,42 @@ document.getElementById("produto-lavagem")?.addEventListener("change", function(
         document.getElementById("concentracao-lavagem").value = option.dataset.concentracao || "";
     }
 });
+function listarLavagens() {
+    fetch("listar_lavagens.php")
+        .then(res => res.json())
+        .then(res => {
+            if (res.success) {
+                let html = "<table class='table table-striped'>";
+                html += "<tr><th>ID</th><th>Fantasia</th><th>Reservatório</th><th>Data</th><th>Ações</th></tr>";
+
+                res.data.forEach(lav => {
+                    html += `
+                        <tr>
+                            <td>${lav.id}</td>
+                            <td>${lav.fantasia}</td>
+                            <td>${lav.reservatorio}</td>
+                            <td>${lav.data_cadastro}</td>
+                            <td>
+                                <a href="gerar_pdf_lavagem.php?id=${lav.id}" target="_blank" class="btn btn-danger btn-sm">
+                                    Gerar PDF
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                html += "</table>";
+                document.getElementById("lista-lavagens").innerHTML = html;
+            } else {
+                alert("Erro: " + res.message);
+            }
+        })
+        .catch(err => console.error("Erro na listagem:", err));
+}
+
+
+
+
 
 </script>
 </body>
