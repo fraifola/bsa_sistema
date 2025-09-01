@@ -104,8 +104,8 @@
                     <div class="col-md-6">
                         <label for="tipo_cliente" class="form-label">Cliente</label>
                         <select id="tipo_cliente" name="cliente" class="form-select">
-                        <option value="">Carregando clientes...</option>
-                    </select>
+                            <option value="">Carregando clientes...</option>
+                        </select>
                     </div>
                     <div class="col-md-6">
                         <label for="os_servico" class="form-label">Serviço</label>
@@ -153,10 +153,10 @@
                         <input type="hidden" id="edit_os_id" name="id">
                         <div class="mb-3">
                             <label for="edit_tipo_cliente" class="form-label">Cliente</label>
-                            <select id="tipo_cliente" name="cliente" class="form-select">
-                            <option value="">Carregando clientes...</option>
+                            <select id="edit_tipo_cliente" name="cliente" class="form-select">
+                                <option value="">Carregando clientes...</option>
                             </select>
-                            </div>
+                        </div>
                         <div class="mb-3">
                             <label for="edit_os_servico" class="form-label">Serviço</label>
                             <input type="text" id="edit_os_servico" name="servico" class="form-control" readonly>
@@ -259,8 +259,8 @@
         setupDropdownNavigation('#clientes', sections.clientes, carregarClientesDropdown);
         setupDropdownNavigation('#cadastro-cliente', sections.cadastroCliente);
         setupDropdownNavigation('#cadastro-conta-pagar', sections.cadastroContaPagar);
-        setupDropdownNavigation('#listar-pagamentos-secao', sections.listarPagamentos, carregarContas);
-        setupDropdownNavigation('#lavagem-tanque', sections.lavagemTanque, initializeLavagemTanque);
+        setupDropdownNavigation('#listar-pagamentos-secao', sections.listarPagamentos,);
+        setupDropdownNavigation('#lavagem-tanque', sections.lavagemTanque);
     }
 
     function setupDropdownNavigation(selector, section, callback = null) {
@@ -300,7 +300,7 @@
     function carregarClientesDropdown() {
     console.log('Iniciando carregamento de clientes...');
     
-    fetch('get_clientes.php?operacional=1')
+    fetch('get_clientes.php')
         .then(response => response.json())
         .then(result => {
             console.log('Dados recebidos:', result);
