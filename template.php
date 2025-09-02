@@ -16,13 +16,30 @@ $html = '
     right: 0;
     height: 30mm;
     border-bottom: 3px solid #4CAF50;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 5px 15px;
+  }
+  .cabecalho {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .cabecalho td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  .cabecalho .logo {
+    text-align: left;
+    width: 20%;
+  }
+  .cabecalho .titulo {
+    font-size: 14px;
+    font-weight: bold;
+    color: #2d572c;
+    text-align: center;
+    width: 60%;
+  }
+  .cabecalho .vazio {
+    width: 20%;
   }
   header img { height: 40px; }
-  header .titulo { font-size: 14px; font-weight: bold; color: #2d572c; text-align: center; flex: 1; }
 
   /* Rodapé fixo */
   footer {
@@ -34,9 +51,56 @@ $html = '
     border-top: 1px solid #ccc;
     font-size: 9px;
     text-align: center;
-    line-height: 18px;
+    line-height: 14px;
     color: #555;
   }
+    table { width: 100%; border-collapse: collapse; margin-top: 5px; }
+    th, td { border: 1px solid #000; padding: 4px; font-size: 10px; }
+    th { background: none; text-align: center; font-weight: bold; }
+    
+    @page {
+  margin: 15mm 10mm 15mm 10mm; /* margens menores */
+}
+
+body {
+  font-family: DejaVu Sans, sans-serif;
+  font-size: 10px; /* menor */
+  margin: 0;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 4px;
+  page-break-inside: avoid; /* não quebra tabela */
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 3px; /* padding menor */
+  font-size: 9px;
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+}
+
+footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  font-size: 8px;
+  color: #555;
+}
+
+
 
   /* Seções */
   .section { margin: 15px 0; }
@@ -50,16 +114,36 @@ $html = '
   tr { page-break-inside: avoid; page-break-after: auto; }
 
   /* Assinaturas */
-  .assinaturas { display: flex; justify-content: space-between; margin-top: 50px; }
-  .assinatura { text-align: center; width: 45%; }
-  .linha-assinatura { border-top: 1px solid #000; margin-top: 40px; }
+  .assinaturas { margin-top: 50px; width: 100%; }
+  .assinaturas td { text-align: center; width: 50%; }
+  .linha-assinatura { border-top: 1px solid #000; margin: 40px 20px 0 20px; }
 </style>
 
 <!-- Cabeçalho -->
 <header>
-   <img src="C:/xampp/htdocs/bsa_sistema/logo_bsa.png" class="logo">
-  <div class="titulo">ORDEM DE SERVIÇO DE HIGIENIZAÇÃO DE RESERVATÓRIOS</div>
+  <table style="width:100%; border-collapse: collapse;">
+    <tr>
+      <td style="width:25%;">
+      <img src="C:/xampp/htdocs/bsa_sistema/logo_bsa.png" style="height:60px;" alt="Bahia Saúde Ambiental company logo featuring stylized green and blue elements with the company name in bold text. The logo appears on a clean white background, conveying a professional and trustworthy tone.">
+</td>
+      <td style="width:50%; text-align:center; font-size:14px; font-weight:bold;">
+        FBAHIA TRATAMENTOS FITOSSANITÁRIOS E PRESTAÇÃO DE SERVIÇOS LTDA<br>
+        CNPJ 05.406.298/0001-58<br>
+        e-mail: operacional@bahiasaudeambiental.com.br<br>
+        LOT PERIMETRO IRRIGADO DO BRUMADO, 93 - LIVRAMENTO DE NOSSA SENHORA - BA
+      </td>
+      <td style="width:25%; text-align:right; font-size:12px;">
+        <div style="background:#4CAF50; color:#fff; padding:5px; border-radius:5px;">
+          <b>71<br>3024-5891<br>98239-0303</b>
+        </div>
+      </td>
+    </tr>
+  </table>
+  <h2 style="text-align:center; margin-top:10px; font-size:14px;">
+    ORDEM DE SERVIÇO DE HIGIENIZAÇÃO DE RESERVATÓRIOS
+  </h2>
 </header>
+
 
 <!-- Rodapé -->
 <footer>
@@ -70,23 +154,26 @@ $html = '
 
 <!-- Conteúdo -->
 <div class="section">
-  <b>OS Nº:</b> '.$dados["os_numero"].' &nbsp; | 
-  <b>Emissão:</b> '.$dados["emissao"].' &nbsp; | 
-  <b>Execução:</b> '.$dados["data_execucao"].'
+  <b>OS Nº:</b> '.htmlspecialchars($dados["os_numero"] ?? "").' &nbsp; | 
+  <b>Emissão:</b> '.htmlspecialchars($dados["emissao"] ?? "").' &nbsp; | 
+  <b>Execução:</b> '.htmlspecialchars($dados["data_execucao"] ?? "").'
 </div>
 
-<h4>Dados do Cliente</h4>
+<h4 style="border-bottom:1px solid #000; background:none; padding:3px; font-size:11px; text-transform:uppercase;">
+  Dados do Cliente
+</h4>
+
 <table>
   <tr>
-    <td><b>Cliente:</b> '.$dados["fantasia"].'</td>
-    <td><b>Atividade:</b> '.$dados["atividade_imovel"].'</td>
+    <td><b>Cliente:</b> '.htmlspecialchars($dados["fantasia"] ?? "").'</td>
+    <td><b>Atividade:</b> '.htmlspecialchars($dados["atividade_imovel"] ?? "").'</td>
   </tr>
   <tr>
-    <td><b>Endereço:</b> '.$dados["endereco"].'</td>
-    <td><b>Telefone:</b> '.$dados["telefone"].'</td>
+    <td><b>Endereço:</b> '.htmlspecialchars($dados["endereco"] ?? "").'</td>
+    <td><b>Telefone:</b> '.htmlspecialchars($dados["telefone"] ?? "").'</td>
   </tr>
   <tr>
-    <td colspan="2"><b>Contato:</b> '.$dados["contato"].'</td>
+    <td colspan="2"><b>Contato:</b> '.htmlspecialchars($dados["contato"] ?? "").'</td>
   </tr>
 </table>
 
@@ -99,15 +186,15 @@ $html = '
     </tr>
   </thead>
   <tbody>
-    '.$dados["tabela_reservatorios"].'
+    '.($dados["tabela_reservatorios"] ?? "").'
   </tbody>
 </table>
 
 <h4>Observações</h4>
 <table>
-  <tr><td><b>Supervisor:</b> '.$dados["obs_superior"].'</td></tr>
-  <tr><td><b>Cliente:</b> '.$dados["obs_cliente"].'</td></tr>
-  <tr><td><b>Gerais:</b> '.$dados["info_gerais"].'</td></tr>
+  <tr><td><b>Supervisor:</b> '.htmlspecialchars($dados["obs_superior"] ?? "").'</td></tr>
+  <tr><td><b>Cliente:</b> '.htmlspecialchars($dados["obs_cliente"] ?? "").'</td></tr>
+  <tr><td><b>Gerais:</b> '.htmlspecialchars($dados["info_gerais"] ?? "").'</td></tr>
 </table>
 
 <h4>Produtos Utilizados</h4>
@@ -120,31 +207,44 @@ $html = '
   </thead>
   <tbody>
     <tr>
-      <td>'.$dados["produto"].'</td>
-      <td>'.$dados["principio_ativo"].'</td>
-      <td>'.$dados["quantidade"].'</td>
-      <td>'.$dados["unidade_medida"].'</td>
-      <td>'.$dados["reg_min_saude"].'</td>
-      <td>'.$dados["concentracao"].'</td>
-      <td>'.$dados["volume"].'</td>
+      <td>'.htmlspecialchars($dados["produto"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["principio_ativo"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["quantidade"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["unidade_medida"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["reg_min_saude"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["concentracao"] ?? "").'</td>
+      <td>'.htmlspecialchars($dados["volume"] ?? "").'</td>
     </tr>
   </tbody>
 </table>
 
-<div class="section">
-  <p><b>Executores:</b> '.$dados["executores"].'</p>
-  <p><b>Responsável Técnico:</b> '.$dados["responsavel"].'</p>
-</div>
+<table style="width:100%; margin-top:20px;">
+  <tr>
+    <td style="width:70%;">
+      <b>Executores:</b> '.htmlspecialchars($dados["executores"] ?? "").'<br>
+      Técnico: _____________<br>
+      Auxiliar: _____________
+    </td>
+    <td style="width:30%; text-align:right;">
+      <img src="qrcode.png" style="width:80px;">
+    </td>
+  </tr>
+</table>
 
-<div class="assinaturas">
-  <div class="assinatura">
-    <div class="linha-assinatura"></div>
-    <p>Responsável Técnico</p>
-  </div>
-  <div class="assinatura">
-    <div class="linha-assinatura"></div>
-    <p>Cliente</p>
-  </div>
-</div>
+<p style="margin-top:30px;">Cliente: ____________________________</p>
+
+
+<table class="assinaturas">
+  <tr>
+    <td>
+      <div class="linha-assinatura"></div>
+      <p>Responsável Técnico</p>
+    </td>
+    <td>
+      <div class="linha-assinatura"></div>
+      <p>Cliente</p>
+    </td>
+  </tr>
+</table>
 ';
 ?>
