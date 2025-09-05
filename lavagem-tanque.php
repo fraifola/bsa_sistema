@@ -578,11 +578,6 @@ function listarLavagens() {
         })
         .catch(err => console.error("Erro na listagem:", err));
 }
-
-
-
-
-
 </script>
 </body>
 </html>
