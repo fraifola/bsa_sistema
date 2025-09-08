@@ -162,6 +162,22 @@
       </div>
     </form>
   </div>
+  <h4>Ordens de Serviço Registradas</h4>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Cliente</th>
+            <th>Endereço</th>
+            <th>Contato</th>
+            <th>Data Execução</th>
+            <th>Executores</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody id="lista-pragas"></tbody>
+</table>
+
 <script>
 /// ============ FORMULÁRIO DE CONTROLE DE PRAGAS ============
 document.addEventListener("DOMContentLoaded", function () {
@@ -205,29 +221,31 @@ function initializePragas() {
 function carregarClientesParaPragas() {
     console.log("➡️ Carregando clientes...");
     fetch("get_clientes.php")
-        .then((response) => response.json())
-        .then((result) => {
-            console.log("✅ Clientes recebidos:", result);
-            if (!result.success) {
-                throw new Error(result.error || "Erro ao carregar clientes");
-            }
+    .then((response) => response.json())
+    .then((result) => {
+        console.log("✅ Clientes recebidos:", result);
+        if (!result.success) {
+            throw new Error(result.error || "Erro ao carregar clientes");
+        }
 
-            const select = document.getElementById("cliente-pragas");
-            select.innerHTML = '<option value="">Selecione o cliente...</option>';
+        const select = document.getElementById("cliente-pragas");
+        select.innerHTML = '<option value="">Selecione o cliente...</option>';
 
-            const clientes = Array.isArray(result.data) ? result.data : [];
+        const clientes = Array.isArray(result.data) ? result.data : [];
 
-            clientes.forEach((cliente) => {
-                const option = document.createElement("option");
-                option.value = cliente.id;
-                option.textContent = cliente.fantasia || cliente.razao_social;
-                select.appendChild(option);
-            });
-        })
-        .catch((error) => {
-            console.error("💥 Erro ao carregar clientes:", error);
-            alert("Erro ao carregar clientes: " + error.message);
+        clientes.forEach((cliente) => {
+            const option = document.createElement("option");
+            option.value = cliente.id;
+            option.textContent = cliente.fantasia || cliente.razao_social;
+            select.appendChild(option);
         });
+    })
+    .catch((error) => {
+        console.error("💥 Erro ao carregar clientes:", error);
+        alert("Erro ao carregar clientes: " + error.message);
+    });
+
+
 }
 
 function carregarDadosClientePragas(clienteId) {
@@ -398,29 +416,65 @@ function coletarDadosPragas() {
 function enviarDadosPragas(dados) {
     console.log("🚀 Enviando para salvar_pragas.php:", dados);
 
-    fetch("salvar_pragas.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados),
-    })
-        .then((res) => {
-            console.log("📡 Resposta bruta do fetch:", res);
-            return res.json();
-        })
-        .then((result) => {
-            console.log("📨 Resposta JSON:", result);
-            if (result.success) {
-                alert("OS salva com sucesso! ID: " + result.id);
-                document.getElementById("formPragas").reset();
-                document.getElementById("produtos-body").innerHTML = "";
-            } else {
-                alert("Erro: " + result.message);
+  fetch("salvar_pragas.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(dados)
+})
+.then(res => res.json())
+.then(result => {
+    console.log("📩 Resposta do servidor:", result);
+
+    if (result.success) {
+        alert("✅ Ordem de serviço salva com sucesso! ID: " + result.id);
+        // Aqui você pode limpar o formulário ou atualizar a tela
+        document.getElementById("formPragas").reset();
+    } else {
+        alert("⚠️ Erro: " + result.message);
+    }
+})
+.catch(err => {
+    console.error("💥 Erro no fetch:", err);
+    alert("Erro ao salvar: " + err.message);
+});
+function carregarPragas() {
+    fetch("listar_pragas.php")
+        .then(response => response.json())
+        .then(res => {
+            let tbody = document.getElementById("lista-pragas");
+            tbody.innerHTML = "";
+
+            if (!res.success || res.data.length === 0) {
+                tbody.innerHTML = "<tr><td colspan='7'>Nenhum registro encontrado</td></tr>";
+                return;
             }
+
+            res.data.forEach(praga => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${praga.id}</td>
+                        <td>${praga.fantasia ?? ''}</td>
+                        <td>${praga.endereco ?? ''}</td>
+                        <td>${praga.contato ?? ''} (${praga.telefone ?? ''})</td>
+                        <td>${praga.data_execucao ?? ''}</td>
+                        <td>${praga.executores ?? '-'}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="gerarPDFPraga(${praga.id})">
+                                Gerar PDF
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
         })
-        .catch((err) => {
-            console.error("💥 Erro no fetch:", err);
-            alert("Erro ao salvar: " + err.message);
-        });
+        .catch(err => console.error("Erro ao carregar pragas:", err));
+}
+
+function gerarPDFPraga(id) {
+    window.open("gerar_pdf_pragas.php?id=" + id, "_blank");
+}
+
+document.addEventListener("DOMContentLoaded", carregarPragas);
 }
 
 /* ================= OUTROS ================= */
