@@ -2,11 +2,9 @@
 header('Content-Type: application/json; charset=utf-8');
 
 try {
-    // Conectar ao banco
     $pdo = new PDO("mysql:host=localhost;dbname=bsa;charset=utf8", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Buscar registros da tabela controle_praga
     $stmt = $pdo->query("
         SELECT 
             id, 
@@ -19,7 +17,7 @@ try {
             data_execucao, 
             executores, 
             observacoes
-        FROM controle_praga
+        FROM controle_pragas
         ORDER BY id DESC
     ");
     $pragas = $stmt->fetchAll(PDO::FETCH_ASSOC);

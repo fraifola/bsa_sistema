@@ -1,10 +1,4 @@
 <?php
-// listar_contas.php
-
-// Configurações
-header('Content-Type: application/json');
-ini_set('display_errors', 0); // Desative em produção
-
 // Credenciais do banco (substitua pelas suas)
 $host = "localhost";
 $usuario = "root";

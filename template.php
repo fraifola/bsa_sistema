@@ -124,7 +124,7 @@ footer {
   <table style="width:100%; border-collapse: collapse;">
     <tr>
       <td style="width:25%;">
-      <img src="C:/xampp/htdocs/bsa_sistema/logo_bsa.png" style="height:60px;" alt="Bahia Saúde Ambiental company logo featuring stylized green and blue elements with the company name in bold text. The logo appears on a clean white background, conveying a professional and trustworthy tone.">
+      <img src="bsa_logo.png" style="height:60px;" alt="Bahia Saúde Ambiental company logo featuring stylized green and blue elements with the company name in bold text. The logo appears on a clean white background, conveying a professional and trustworthy tone.">
 </td>
       <td style="width:50%; text-align:center; font-size:14px; font-weight:bold;">
         FBAHIA TRATAMENTOS FITOSSANITÁRIOS E PRESTAÇÃO DE SERVIÇOS LTDA<br>

@@ -80,7 +80,6 @@ if (!isset($html) || trim($html) === '') {
 $options = new Options();
 $options->set('isHtml5ParserEnabled', true);
 $options->set('isRemoteEnabled', true);
-// (opcional) permitir caminhos relativos locais
 $options->setChroot(__DIR__);
 
 $dompdf = new Dompdf($options);

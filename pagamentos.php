@@ -39,9 +39,14 @@
     </table>
 </div>
 <script>
-        function carregarContas() {
+    function carregarContas() {
         fetch('listar_contas.php')
-            .then(handleResponse)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Erro HTTP: " + response.status);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (!data.success) {
                     throw new Error(data.error || 'Erro no servidor');
@@ -75,12 +80,26 @@
                     tabela.appendChild(row);
                 });
             })
-            .catch(handleError);
+            .catch(error => {
+                console.error("Erro ao carregar contas:", error);
+                alert("Não foi possível carregar as contas. Veja o console para detalhes.");
+            });
     }
-    if (document.getElementById("financeiro")) {
-    sections.forEach(sec => sec.style.display = "none");
-    document.getElementById("financeiro").style.display = "block";
-  }
+
+    // Funções auxiliares básicas (caso você não tenha em outro arquivo)
+    function formatarData(data) {
+        if (!data) return "";
+        const d = new Date(data);
+        return d.toLocaleDateString("pt-BR");
+    }
+
+    function formatarMoeda(valor) {
+        if (!valor) return "0,00";
+        return parseFloat(valor).toFixed(2).replace(".", ",");
+    }
+
+    // Chamar no carregamento da página
+    document.addEventListener("DOMContentLoaded", carregarContas);
 </script>
 </body>
 </html>

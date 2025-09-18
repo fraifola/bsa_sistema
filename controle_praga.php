@@ -162,22 +162,25 @@
       </div>
     </form>
   </div>
-  <h4>Ordens de Serviço Registradas</h4>
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Cliente</th>
-            <th>Endereço</th>
-            <th>Contato</th>
-            <th>Data Execução</th>
-            <th>Executores</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody id="lista-pragas"></tbody>
+  <h2>Controle de Pragas</h2>
+<table class="table" id="tabelaPragas">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Fantasia</th>
+      <th>Endereço</th>
+      <th>Telefone</th>
+      <th>Contato</th>
+      <th>Atividade</th>
+      <th>Data Emissão</th>
+      <th>Data Execução</th>
+      <th>Executores</th>
+      <th>Observações</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
 </table>
-
 <script>
 /// ============ FORMULÁRIO DE CONTROLE DE PRAGAS ============
 document.addEventListener("DOMContentLoaded", function () {
@@ -501,10 +504,34 @@ function excluirLavagem(id) {
         });
     }
 }
-
-function gerarPdf(id) {
-    window.open("gerar_pdf.php?id=" + id, "_blank");
-}
+fetch("listar_pragas.php")
+  .then(res => res.json())
+  .then(json => {
+    if(json.success){
+      let tbody = document.querySelector("#tabelaPragas tbody");
+      json.data.forEach(item => {
+        let tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${item.id}</td>
+          <td>${item.fantasia}</td>
+          <td>${item.endereco}</td>
+          <td>${item.telefone}</td>
+          <td>${item.contato}</td>
+          <td>${item.atividade_imovel}</td>
+          <td>${item.data_emissao}</td>
+          <td>${item.data_execucao}</td>
+          <td>${item.executores}</td>
+          <td>${item.observacoes}</td>
+          <td>
+            <a href="gerar_pdf_pragas.php?id=${item.id}" class="btn btn-danger btn-sm">
+              Gerar PDF
+            </a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+  });
 </script>
 
 </body>
