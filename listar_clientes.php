@@ -1,5 +1,5 @@
 <?php
-$conn = new mysqli("localhost", "root", "", "bsa_clientes");
+$conn = new mysqli("localhost", "root", "", "bsa");
 if ($conn->connect_error) {
     die("<tr><td colspan='6'>Erro de conexão: ".$conn->connect_error."</td></tr>");
 }

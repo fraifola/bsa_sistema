@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 
 // Conexão com o banco de dados
-$conn = new mysqli("localhost", "root", "", "bsa_clientes");
+$conn = new mysqli("localhost", "root", "", "bsa");
 if ($conn->connect_error) {
     die(json_encode(['success' => false, 'error' => 'Erro de conexão: ' . $conn->connect_error]));
 }
