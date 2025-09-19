@@ -1,4 +1,22 @@
 <?php
+// Monta as linhas da tabela de produtos
+$linhasProdutos = "";
+if (!empty($dados["produtos"])) {
+    foreach ($dados["produtos"] as $p) {
+        $linhasProdutos .= "
+        <tr>
+          <td>".htmlspecialchars($p["produto"] ?? "")."</td>
+          <td>".htmlspecialchars($p["principio_ativo"] ?? "")."</td>
+          <td>".htmlspecialchars($p["quantidade_utilizada"] ?? "")."</td>
+          <td>".htmlspecialchars($p["unidade_medida"] ?? "")."</td>
+          <td>".htmlspecialchars($p["registro_ms"] ?? "")."</td>
+          <td>".htmlspecialchars($p["concentracao"] ?? "")."</td>
+        </tr>";
+    }
+} else {
+    $linhasProdutos = '<tr><td colspan="6" style="text-align:center;">Nenhum produto informado</td></tr>';
+}
+
 $html = '
 <style>
   body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #333; margin: 20px; }
@@ -49,22 +67,16 @@ $html = '
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td>'.htmlspecialchars($dados["produto"] ?? "").'</td>
-      <td>'.htmlspecialchars($dados["principio_ativo"] ?? "").'</td>
-      <td>'.htmlspecialchars($dados["quantidade"] ?? "").'</td>
-      <td>'.htmlspecialchars($dados["unidade_medida"] ?? "").'</td>
-      <td>'.htmlspecialchars($dados["reg_min_saude"] ?? "").'</td>
-      <td>'.htmlspecialchars($dados["concentracao"] ?? "").'</td>
-    </tr>
+    '.$linhasProdutos.'
   </tbody>
 </table>
 
 <h4>Observações</h4>
 <table>
-  <tr><td><b>Supervisor:</b> '.htmlspecialchars($dados["obs_superior"] ?? "").'</td></tr>
+  <tr><td><b>Supervisor:</b> '.htmlspecialchars($dados["obs_supervisor"] ?? "").'</td></tr>
   <tr><td><b>Cliente:</b> '.htmlspecialchars($dados["obs_cliente"] ?? "").'</td></tr>
-  <tr><td><b>Gerais:</b> '.htmlspecialchars($dados["info_gerais"] ?? "").'</td></tr>
+  <tr><td><b>Gerais:</b> '.htmlspecialchars($dados["obs_gerais"] ?? "").'</td></tr>
+  <tr><td><b>Executores:</b> '.htmlspecialchars($dados["executores"] ?? "").'</td></tr>
 </table>
 
 <h4>Assinaturas</h4>

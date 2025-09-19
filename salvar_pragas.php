@@ -1,5 +1,5 @@
 <?php
-header("Content-Type: application/json");
+header("Content-Type: application/json; charset=UTF-8");
 require "conexao.php"; // sua conexão com mysqli
 
 // Mostrar erros (somente para debug em desenvolvimento)
@@ -14,46 +14,57 @@ try {
         throw new Exception("Nenhum dado recebido");
     }
 
-    // ---------- INSERIR ORDEM DE SERVIÇO PRINCIPAL ----------
-    $stmt = $conn->prepare("
-        INSERT INTO controle_pragas
-        (cliente_id, fantasia, endereco, telefone, contato, atividade_imovel, data_emissao, data_execucao, executores, observacoes)
-        VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?)
-    ");
+// ---------- INSERIR ORDEM DE SERVIÇO PRINCIPAL ----------
+$stmt = $conn->prepare("
+    INSERT INTO controle_pragas
+    (cliente_id, fantasia, endereco, telefone, contato, atividade_imovel, area_tratada, pragas_alvo, data_emissao, data_execucao, executores, observacoes, obs_supervisor, obs_cliente, obs_gerais, obs_executores)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), ?, ?, ?, ?, ?, ?)
+");
 
-    if (!$stmt) {
-        throw new Exception("Erro ao preparar statement: " . $conn->error);
-    }
+if (!$stmt) {
+    throw new Exception("Erro ao preparar statement: " . $conn->error);
+}
 
-    // Tratar campos nulos
-    $cliente_id       = !empty($dados["cliente_id"]) ? (int)$dados["cliente_id"] : null;
-    $fantasia         = !empty($dados["fantasia"]) ? $dados["fantasia"] : null;
-    $endereco         = !empty($dados["endereco"]) ? $dados["endereco"] : null;
-    $telefone         = !empty($dados["telefone"]) ? $dados["telefone"] : null;
-    $contato          = !empty($dados["contato"]) ? $dados["contato"] : null;
-    $atividade_imovel = !empty($dados["atividade_imovel"]) ? $dados["atividade_imovel"] : null;
-    $executores       = !empty($dados["executores"]) ? $dados["executores"] : null;
-    $observacoes      = !empty($dados["observacoes"]) ? $dados["observacoes"] : null;
+$cliente_id       = $dados["cliente_id"] ?? null;
+$fantasia         = $dados["fantasia"] ?? null;
+$endereco         = $dados["endereco"] ?? null;
+$telefone         = $dados["telefone"] ?? null;
+$contato          = $dados["contato"] ?? null;
+$atividade_imovel = $dados["atividade_imovel"] ?? null;
+$area_tratada     = $dados["area_tratada"] ?? null;
+$pragas_alvo      = $dados["pragas_alvo"] ?? null;
+$executores       = $dados["executores"] ?? null;
+$observacoes      = $dados["observacoes"] ?? null;
+$obs_supervisor   = $dados["obs_supervisor"] ?? null;
+$obs_cliente      = $dados["obs_cliente"] ?? null;
+$obs_gerais       = $dados["obs_gerais"] ?? null;
+$obs_executores   = $dados["obs_executores"] ?? null;
 
-    // 8 variáveis -> 1 inteiro + 7 strings
-    $stmt->bind_param(
-        "isssssss",
-        $cliente_id,
-        $fantasia,
-        $endereco,
-        $telefone,
-        $contato,
-        $atividade_imovel,
-        $executores,
-        $observacoes
-    );
+// 1 int + 13 strings => 14 variáveis
+$stmt->bind_param(
+    "isssssssssssss",
+    $cliente_id,
+    $fantasia,
+    $endereco,
+    $telefone,
+    $contato,
+    $atividade_imovel,
+    $area_tratada,
+    $pragas_alvo,
+    $executores,
+    $observacoes,
+    $obs_supervisor,
+    $obs_cliente,
+    $obs_gerais,
+    $obs_executores
+);
 
-    if (!$stmt->execute()) {
-        throw new Exception("Erro ao inserir ordem de serviço: " . $stmt->error);
-    }
+if (!$stmt->execute()) {
+    throw new Exception("Erro ao inserir ordem de serviço: " . $stmt->error);
+}
 
-    $id_os = $stmt->insert_id;
-    $stmt->close();
+$id_os = $stmt->insert_id;
+$stmt->close();
 
     // ---------- INSERIR PRODUTOS ----------
     if (!empty($dados["produtos"]) && is_array($dados["produtos"])) {
@@ -82,6 +93,13 @@ try {
 
     echo json_encode(["success" => true, "id" => $id_os]);
 
-} catch (Exception $e) {
-    echo json_encode(["success" => false, "message" => $e->getMessage()]);
+}catch (Exception $e) {
+    http_response_code(500); // status erro
+    echo json_encode([
+        "success" => false,
+        "error" => $e->getMessage(),
+        "trace" => $e->getTraceAsString()
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
 }
+
